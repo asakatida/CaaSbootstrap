@@ -2,36 +2,42 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "description": "A syntax tree",
   "id": "https://github.com/grandquista/CaaSbootstrap/schema.json",
-  "type": "object",
-  "required": [ "type", "children", "offset" ],
-  "allOf": [
-    { "$ref": "#/definitions/node" }
-  ],
   "definitions": {
-    "node": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string"
-        },
-        "children": {
-          "type": "array",
-          "items": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/definitions/node"
-              }
-            ]
+    "nodeArray": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "#/definitions/nodeArray"
+          },
+          {
+            "$ref": "#"
           }
-        },
-        "offset": {
-          "type": "integer",
-          "minimum": 0
-        }
+        ]
       }
     }
-  }
+  },
+  "type": "object",
+  "required": [
+    "type",
+    "children",
+    "offset"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "pattern": "^\\w+$"
+    },
+    "children": {
+      "$ref": "#/definitions/nodeArray"
+    },
+    "offset": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false
 }
