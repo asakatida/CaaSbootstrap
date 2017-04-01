@@ -6,7 +6,7 @@ const http = require('http');
 const peg = require('./peg');
 const winston = require('winston')
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 const app = express();
 const apipeg = express();
@@ -60,6 +60,6 @@ apipeg.get('*', function (req, res) {
   clientRequest.end()
 });
 
-app.listen(PORT);
+http.createServer(app).listen(PORT);
 
 winston.info('Running on http://localhost:' + PORT);

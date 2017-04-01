@@ -1,0 +1,735 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "A PEG syntax tree",
+  "id": "https://github.com/grandquista/CaaSbootstrap/peg.schema",
+  "type": "object",
+  "allOf": [
+    { "$ref": "schema.json#/definitions/node" },
+    {
+      "properties": {
+        "type": { "type": "string", "pattern": "^Grammar$" },
+        "children": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              { "$ref": "#/definitions/spacing" },
+              { "$ref": "#/definitions/definition" },
+              { "$ref": "#/definitions/endoffile" }
+            ]
+          },
+          "minItems": 3,
+          "uniqueItems": true
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "definition": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^Definition$" },
+            "children": {
+              "type": "array",
+              "items": [
+                { "$ref": "#/definitions/identifier" },
+                { "$ref": "#/definitions/leftarrow" },
+                { "$ref": "#/definitions/expression" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "expression": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^Expression$" },
+            "children": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "$ref": "#/definitions/sequence" },
+                  { "$ref": "#/definitions/slash" }
+                ]
+              },
+              "minItems": 1
+            }
+          }
+        }
+      ]
+    },
+    "sequence": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^Sequence$" },
+            "children": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/prefix" }
+            }
+          }
+        }
+      ]
+    },
+    "prefix": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^Prefix$" },
+            "children": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": [
+                    {
+                      "anyOf": [
+                        { "$ref": "#/definitions/and" },
+                        { "$ref": "#/definitions/not" }
+                      ]
+                    },
+                    { "$ref": "#/definitions/suffix" }
+                  ]
+                },
+                {
+                  "type": "array",
+                  "items": [
+                    { "$ref": "#/definitions/suffix" }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "suffix": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^Suffix$" },
+            "children": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": [
+                    { "$ref": "#/definitions/primary" },
+                    {
+                      "anyOf": [
+                        { "$ref": "#/definitions/question" },
+                        { "$ref": "#/definitions/star" },
+                        { "$ref": "#/definitions/plus" }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "array",
+                  "items": [
+                    { "$ref": "#/definitions/primary" }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "primary": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^Primary$" },
+            "children": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": [
+                    { "$ref": "#/definitions/identifier" }
+                  ]
+                },
+                {
+                  "type": "array",
+                  "items": [
+                    { "$ref": "#/definitions/open" },
+                    { "$ref": "#/definitions/expression" },
+                    { "$ref": "#/definitions/close" }
+                  ]
+                },
+                {
+                  "type": "array",
+                  "items": [
+                    { "$ref": "#/definitions/literal" }
+                  ]
+                },
+                {
+                  "type": "array",
+                  "items": [
+                    { "$ref": "#/definitions/class" }
+                  ]
+                },
+                {
+                  "type": "array",
+                  "items": [
+                    { "$ref": "#/definitions/dot" }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "identifier": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^Identifier$" },
+            "children": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "$ref": "#/definitions/identstart" },
+                  { "$ref": "#/definitions/identcont" },
+                  { "$ref": "#/definitions/spacing" }
+                ]
+              },
+              "minItems": 2
+            }
+          }
+        }
+      ]
+    },
+    "identstart": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^IdentStart$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    "e",
+                    "f",
+                    "g",
+                    "h",
+                    "i",
+                    "j",
+                    "k",
+                    "l",
+                    "m",
+                    "n",
+                    "o",
+                    "p",
+                    "q",
+                    "r",
+                    "s",
+                    "t",
+                    "u",
+                    "v",
+                    "w",
+                    "x",
+                    "y",
+                    "z",
+                    "A",
+                    "B",
+                    "C",
+                    "D",
+                    "E",
+                    "F",
+                    "G",
+                    "H",
+                    "I",
+                    "J",
+                    "K",
+                    "L",
+                    "M",
+                    "N",
+                    "O",
+                    "P",
+                    "Q",
+                    "R",
+                    "S",
+                    "T",
+                    "U",
+                    "V",
+                    "W",
+                    "X",
+                    "Y",
+                    "Z",
+                    "_"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "identcont": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^IdentCont$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "0",
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9"
+                      ]
+                    },
+                    { "$ref": "#/definitions/identstart" }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "literal": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^Literal$" },
+            "children": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "'"
+                        ]
+                      },
+                      { "$ref": "#/definitions/char" },
+                      { "$ref": "#/definitions/spacing" }
+                    ]
+                  },
+                  "minItems": 3
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "\""
+                        ]
+                      },
+                      { "$ref": "#/definitions/char" },
+                      { "$ref": "#/definitions/spacing" }
+                    ]
+                  },
+                  "minItems": 3
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "class": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^Class$" },
+            "children": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "[",
+                      "]"
+                    ]
+                  },
+                  { "$ref": "#/definitions/range" },
+                  { "$ref": "#/definitions/spacing" }
+                ]
+              },
+              "minItems": 3,
+              "uniqueItems": true
+            }
+          }
+        }
+      ]
+    },
+    "range": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^Range$" },
+            "children": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": [
+                    { "$ref": "#/definitions/char" },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "-"
+                      ]
+                    },
+                    { "$ref": "#/definitions/char" }
+                  ]
+                },
+                {
+                  "type": "array",
+                  "items": [
+                    { "$ref": "#/definitions/char" }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "char": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^Char$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string",
+                  "pattern": "^(\\\\([nrt'\"\\[\\]\\\\]|[0-2][0-7][0-7|[0-7][0-7]?])|[^\\\\])$"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "leftarrow": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^LEFTARROW$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string",
+                  "pattern": "^<-$"
+                },
+                { "$ref": "#/definitions/spacing" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "slash": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^SLASH$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string",
+                  "pattern": "^/$"
+                },
+                { "$ref": "#/definitions/spacing" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "and": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^AND$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string",
+                  "pattern": "^&$"
+                },
+                { "$ref": "#/definitions/spacing" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "not": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^NOT$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string",
+                  "pattern": "^!$"
+                },
+                { "$ref": "#/definitions/spacing" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "question": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^QUESTION$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string",
+                  "pattern": "^\\?$"
+                },
+                { "$ref": "#/definitions/spacing" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "star": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^STAR$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string",
+                  "pattern": "^\\*$"
+                },
+                { "$ref": "#/definitions/spacing" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "plus": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^PLUS$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string",
+                  "pattern": "^\\+$"
+                },
+                { "$ref": "#/definitions/spacing" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "open": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^OPEN$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string",
+                  "pattern": "^\\($"
+                },
+                { "$ref": "#/definitions/spacing" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "close": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^CLOSE$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string",
+                  "pattern": "^\\)$"
+                },
+                { "$ref": "#/definitions/spacing" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "dot": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^DOT$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string",
+                  "pattern": "^\\.$"
+                },
+                { "$ref": "#/definitions/spacing" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "spacing": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^Spacing$" },
+            "children": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "$ref": "#/definitions/space" },
+                  { "$ref": "#/definitions/comment" }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "comment": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^Comment$" },
+            "children": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "type": "string" },
+                  { "$ref": "#/definitions/endofline" }
+                ]
+              },
+              "minItems": 2
+            }
+          }
+        }
+      ]
+    },
+    "space": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^Space$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "anyOf": [
+                    { "type": "string", "enum": [ " ", "\t" ] },
+                    { "$ref": "#/definitions/endofline" }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "endofline": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^EndOfLine$" },
+            "children": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string",
+                  "pattern": "^(\r\n?|\n)$"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "endoffile": {
+      "allOf": [
+        { "$ref": "schema.json#/definitions/node" },
+        {
+          "properties": {
+            "type": { "type": "string", "pattern": "^EndOfFile$" }
+          }
+        }
+      ]
+    }
+  }
+}
