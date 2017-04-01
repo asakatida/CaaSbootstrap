@@ -16,21 +16,21 @@
         },
         "children": {
           "type": "array",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/spacing"
-              },
-              {
+          "items": [
+            {
+              "$ref": "#/definitions/spacing"
+            },
+            {
+              "type": "array",
+              "items": {
                 "$ref": "#/definitions/definition"
               },
-              {
-                "$ref": "#/definitions/endoffile"
-              }
-            ]
-          },
-          "minItems": 3,
-          "uniqueItems": true
+              "minItems": 1
+            },
+            {
+              "$ref": "#/definitions/endoffile"
+            }
+          ]
         }
       }
     }
@@ -80,17 +80,25 @@
             },
             "children": {
               "type": "array",
-              "items": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/sequence"
-                  },
-                  {
-                    "$ref": "#/definitions/slash"
+              "items": [
+                {
+                  "$ref": "#/definitions/sequence"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": [
+                      {
+                        "$ref": "#/definitions/slash"
+                      },
+                      {
+                        "$ref": "#/definitions/sequence"
+                      }
+                    ]
                   }
-                ]
-              },
-              "minItems": 1
+                }
+              ]
             }
           }
         }
@@ -131,9 +139,9 @@
               ]
             },
             "children": {
+              "type": "array",
               "anyOf": [
                 {
-                  "type": "array",
                   "items": [
                     {
                       "anyOf": [
@@ -151,7 +159,6 @@
                   ]
                 },
                 {
-                  "type": "array",
                   "items": [
                     {
                       "$ref": "#/definitions/suffix"
@@ -177,9 +184,9 @@
               ]
             },
             "children": {
+              "type": "array",
               "anyOf": [
                 {
-                  "type": "array",
                   "items": [
                     {
                       "$ref": "#/definitions/primary"
@@ -200,7 +207,6 @@
                   ]
                 },
                 {
-                  "type": "array",
                   "items": [
                     {
                       "$ref": "#/definitions/primary"
@@ -226,9 +232,9 @@
               ]
             },
             "children": {
+              "type": "array",
               "anyOf": [
                 {
-                  "type": "array",
                   "items": [
                     {
                       "$ref": "#/definitions/identifier"
@@ -236,7 +242,6 @@
                   ]
                 },
                 {
-                  "type": "array",
                   "items": [
                     {
                       "$ref": "#/definitions/open"
@@ -250,7 +255,6 @@
                   ]
                 },
                 {
-                  "type": "array",
                   "items": [
                     {
                       "$ref": "#/definitions/literal"
@@ -258,7 +262,6 @@
                   ]
                 },
                 {
-                  "type": "array",
                   "items": [
                     {
                       "$ref": "#/definitions/class"
@@ -266,7 +269,6 @@
                   ]
                 },
                 {
-                  "type": "array",
                   "items": [
                     {
                       "$ref": "#/definitions/dot"
@@ -293,20 +295,20 @@
             },
             "children": {
               "type": "array",
-              "items": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/identstart"
-                  },
-                  {
+              "items": [
+                {
+                  "$ref": "#/definitions/identstart"
+                },
+                {
+                  "type": "array",
+                  "items": {
                     "$ref": "#/definitions/identcont"
-                  },
-                  {
-                    "$ref": "#/definitions/spacing"
                   }
-                ]
-              },
-              "minItems": 2
+                },
+                {
+                  "$ref": "#/definitions/spacing"
+                }
+              ]
             }
           }
         }
@@ -328,7 +330,6 @@
               "type": "array",
               "items": [
                 {
-                  "type": "string",
                   "enum": [
                     "a",
                     "b",
@@ -409,7 +410,6 @@
                 {
                   "anyOf": [
                     {
-                      "type": "string",
                       "enum": [
                         "0",
                         "1",
@@ -447,46 +447,53 @@
               ]
             },
             "children": {
+              "type": "array",
               "anyOf": [
                 {
-                  "type": "array",
-                  "items": {
-                    "anyOf": [
-                      {
-                        "type": "string",
-                        "enum": [
-                          "'"
-                        ]
-                      },
-                      {
+                  "items": [
+                    {
+                      "enum": [
+                        "'"
+                      ]
+                    },
+                    {
+                      "type": "array",
+                      "items": {
                         "$ref": "#/definitions/char"
-                      },
-                      {
-                        "$ref": "#/definitions/spacing"
                       }
-                    ]
-                  },
-                  "minItems": 3
+                    },
+                    {
+                      "enum": [
+                        "'"
+                      ]
+                    },
+                    {
+                      "$ref": "#/definitions/spacing"
+                    }
+                  ]
                 },
                 {
-                  "type": "array",
-                  "items": {
-                    "anyOf": [
-                      {
-                        "type": "string",
-                        "enum": [
-                          "\""
-                        ]
-                      },
-                      {
+                  "items": [
+                    {
+                      "enum": [
+                        "\""
+                      ]
+                    },
+                    {
+                      "type": "array",
+                      "items": {
                         "$ref": "#/definitions/char"
-                      },
-                      {
-                        "$ref": "#/definitions/spacing"
                       }
-                    ]
-                  },
-                  "minItems": 3
+                    },
+                    {
+                      "enum": [
+                        "\""
+                      ]
+                    },
+                    {
+                      "$ref": "#/definitions/spacing"
+                    }
+                  ]
                 }
               ]
             }
@@ -508,25 +515,27 @@
             },
             "children": {
               "type": "array",
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "enum": [
-                      "[",
-                      "]"
-                    ]
-                  },
-                  {
+              "items": [
+                {
+                  "enum": [
+                    "["
+                  ]
+                },
+                {
+                  "type": "array",
+                  "items": {
                     "$ref": "#/definitions/range"
-                  },
-                  {
-                    "$ref": "#/definitions/spacing"
                   }
-                ]
-              },
-              "minItems": 3,
-              "uniqueItems": true
+                },
+                {
+                  "enum": [
+                    "]"
+                  ]
+                },
+                {
+                  "$ref": "#/definitions/spacing"
+                }
+              ]
             }
           }
         }
@@ -545,15 +554,14 @@
               ]
             },
             "children": {
+              "type": "array",
               "anyOf": [
                 {
-                  "type": "array",
                   "items": [
                     {
                       "$ref": "#/definitions/char"
                     },
                     {
-                      "type": "string",
                       "enum": [
                         "-"
                       ]
@@ -564,7 +572,6 @@
                   ]
                 },
                 {
-                  "type": "array",
                   "items": [
                     {
                       "$ref": "#/definitions/char"
@@ -935,17 +942,20 @@
             },
             "children": {
               "type": "array",
-              "items": {
-                "anyOf": [
-                  {
+              "items": [
+                {
+                  "enum": ["#"]
+                },
+                {
+                  "type": "array",
+                  "items": {
                     "type": "string"
-                  },
-                  {
-                    "$ref": "#/definitions/endofline"
                   }
-                ]
-              },
-              "minItems": 2
+                },
+                {
+                  "$ref": "#/definitions/endofline"
+                }
+              ]
             }
           }
         }
@@ -969,7 +979,6 @@
                 {
                   "anyOf": [
                     {
-                      "type": "string",
                       "enum": [
                         " ",
                         "\t"

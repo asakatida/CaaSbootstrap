@@ -1,28 +1,25 @@
 // Hierarchical syntax
 Grammar
-  = spacing:Spacing definition:Definition+ endoffile:EndOfFile {
+  = grammar:(Spacing Definition+ EndOfFile) {
     return {
       'type': 'Grammar',
-      'children': [spacing].concat(definition.concat([endoffile])),
+      'children': grammar,
       'offset': location().start.offset
     }
   }
 Definition
-  = identifier:Identifier leftarrow:LEFTARROW expression:Expression {
+  = definition:(Identifier LEFTARROW Expression) {
     return {
       'type': 'Definition',
-      'children': [identifier, leftarrow, expression],
+      'children': definition,
       'offset': location().start.offset
     }
   }
 Expression
-  = sequence:Sequence sequences:(
-      slash:SLASH seq:Sequence {
-        return [slash, seq]
-      })* {
+  = expression:(Sequence (SLASH Sequence)*) {
     return {
       'type': 'Expression',
-      'children': [sequence].concat([].concat.apply([], sequences)),
+      'children': expression,
       'offset': location().start.offset
     }
   }
@@ -51,143 +48,67 @@ Suffix
     }
   }
 Primary
-  = identifier:Identifier !LEFTARROW {
+  = primary:(identifier:Identifier !LEFTARROW { return identifier }
+  / OPEN Expression CLOSE / Literal / Class / DOT) {
     return {
       'type': 'Primary',
-      'children': [identifier],
-      'offset': location().start.offset
-    }
-  }
-  / open:OPEN expression:Expression close:CLOSE {
-    return {
-      'type': 'Primary',
-      'children': [open, expression, close],
-      'offset': location().start.offset
-    }
-  }
-  / literal:Literal {
-    return {
-      'type': 'Primary',
-      'children': [literal],
-      'offset': location().start.offset
-    }
-  }
-  / cls:Class {
-    return {
-      'type': 'Primary',
-      'children': [cls],
-      'offset': location().start.offset
-    }
-  }
-  / dot:DOT {
-    return {
-      'type': 'Primary',
-      'children': [dot],
+      'children': primary instanceof Array ? primary : [primary],
       'offset': location().start.offset
     }
   }
 // Lexical syntax
 Identifier
-  = identstart:IdentStart identcont:IdentCont* spacing:Spacing {
+  = identifier:(IdentStart IdentCont* Spacing) {
     return {
       'type': 'Identifier',
-      'children': [identstart].concat(identcont.concat([spacing])),
+      'children': identifier,
       'offset': location().start.offset
     }
   }
 IdentStart
-  = [a-z_]i {
+  = identstart:[a-z_]i {
     return {
       'type': 'IdentStart',
-      'children': [text()],
-      'offset': location().start.offset
-    }
-  }
-IdentCont
-  = identstart:IdentStart {
-    return {
-      'type': 'IdentCont',
       'children': [identstart],
       'offset': location().start.offset
     }
   }
-  / [0-9] {
+IdentCont
+  = identcont:(IdentStart / [0-9]) {
     return {
       'type': 'IdentCont',
-      'children': [text()],
+      'children': [identcont],
       'offset': location().start.offset
     }
   }
 Literal
-  = open:['] chars:(
-      !['] char:Char {
-        return char
-      })* close:['] spacing:Spacing {
+  = literal:(
+    ['] (!['] char:Char { return char })* ['] Spacing
+    / ["] (!["] char:Char { return char })* ["] Spacing) {
     return {
       'type': 'Literal',
-      'children': [open].concat(chars.concat([close, spacing])),
-      'offset': location().start.offset
-    }
-  }
-  / open:["] char:(
-      !["] Char {
-        return char
-      })* close:["] spacing:Spacing {
-    return {
-      'type': 'Literal',
-      'children': [open].concat(chars.concat([close, spacing])),
+      'children': literal,
       'offset': location().start.offset
     }
   }
 Class
-  = open:'[' ranges:(
-      !']' range:Range {
-        return range
-      })* close:']' spacing:Spacing {
+  = cls:('[' (!']' range:Range { return range })* ']' Spacing) {
     return {
       'type': 'Class',
-      'children': [open].concat(ranges.concat([close, spacing])),
+      'children': cls,
       'offset': location().start.offset
     }
   }
 Range
-  = start:Char sep:'-' end:Char {
+  = range:(Char '-' Char / Char) {
     return {
       'type': 'Range',
-      'children': [start, sep, end],
-      'offset': location().start.offset
-    }
-  }
-  / char:Char {
-    return {
-      'type': 'Range',
-      'children': [char],
+      'children': range instanceof Array ? range : [range],
       'offset': location().start.offset
     }
   }
 Char
-  = '\\' [nrt'"\[\]\\] {
-    return {
-      'type': 'Char',
-      'children': [text()],
-      'offset': location().start.offset
-    }
-  }
-  / '\\' [0-2][0-7][0-7] {
-    return {
-      'type': 'Char',
-      'children': [text()],
-      'offset': location().start.offset
-    }
-  }
-  / '\\' [0-7][0-7]? {
-    return {
-      'type': 'Char',
-      'children': [text()],
-      'offset': location().start.offset
-    }
-  }
-  / !'\\' . {
+  = ('\\' [nrt'"\[\]\\] / '\\' [0-2][0-7][0-7] / '\\' [0-7][0-7]? / !'\\' .) {
     return {
       'type': 'Char',
       'children': [text()],
@@ -195,82 +116,82 @@ Char
     }
   }
 LEFTARROW
-  = leftarrow:'<-' spacing:Spacing {
+  = leftarrow:('<-' Spacing) {
     return {
       'type': 'LEFTARROW',
-      'children': [leftarrow, spacing],
+      'children': leftarrow,
       'offset': location().start.offset
     }
   }
 SLASH
-  = slash:'/' spacing:Spacing {
+  = slash:('/' Spacing) {
     return {
       'type': 'SLASH',
-      'children': [slash, spacing],
+      'children': slash,
       'offset': location().start.offset
     }
   }
 AND
-  = and:'&' spacing:Spacing {
+  = and:('&' Spacing) {
     return {
       'type': 'AND',
-      'children': [and, spacing],
+      'children': and,
       'offset': location().start.offset
     }
   }
 NOT
-  = not:'!' spacing:Spacing {
+  = not:('!' Spacing) {
     return {
       'type': 'NOT',
-      'children': [not, spacing],
+      'children': not,
       'offset': location().start.offset
     }
   }
 QUESTION
-  = question:'?' spacing:Spacing {
+  = question:('?' Spacing) {
     return {
       'type': 'QUESTION',
-      'children': [question, spacing],
+      'children': question,
       'offset': location().start.offset
     }
   }
 STAR
-  = star:'*' spacing:Spacing {
+  = star:('*' Spacing) {
     return {
       'type': 'STAR',
-      'children': [star, spacing],
+      'children': star,
       'offset': location().start.offset
     }
   }
 PLUS
-  = plus:'+' spacing:Spacing {
+  = plus:('+' Spacing) {
     return {
       'type': 'PLUS',
-      'children': [plus, spacing],
+      'children': plus,
       'offset': location().start.offset
     }
   }
 OPEN
-  = open:'(' spacing:Spacing {
+  = open:('(' Spacing) {
     return {
       'type': 'OPEN',
-      'children': [open, spacing],
+      'children': open,
       'offset': location().start.offset
     }
   }
 CLOSE
-  = close:')' spacing:Spacing {
+  = close:(')' Spacing) {
     return {
       'type': 'CLOSE',
-      'children': [close, spacing],
+      'children': close,
       'offset': location().start.offset
     }
   }
 DOT
-  = dot:'.' spacing:Spacing {
+  = dot:('.' Spacing) {
     return {
       'type': 'DOT',
-      'children': [dot, spacing],
+      'children': dot,
       'offset': location().start.offset
     }
   }
@@ -283,57 +204,26 @@ Spacing
     }
   }
 Comment
-  = open:'#' content:(
-      !EndOfLine dot:. {
-        return dot
-      })* endofline:EndOfLine {
+  = comment:('#' (!EndOfLine dot:. { return dot })* EndOfLine) {
     return {
       'type': 'Comment',
-      'children': [open].concat(content.concat([endofline])),
+      'children': comment,
       'offset': location().start.offset
     }
   }
 Space
-  = ' ' {
+  = space:(' ' / '\t' / EndOfLine) {
     return {
       'type': 'Space',
-      'children': [text()],
-      'offset': location().start.offset
-    }
-  }
-  / '\t' {
-    return {
-      'type': 'Space',
-      'children': [text()],
-      'offset': location().start.offset
-    }
-  }
-  / endofline:EndOfLine {
-    return {
-      'type': 'Space',
-      'children': [endofline],
+      'children': [space],
       'offset': location().start.offset
     }
   }
 EndOfLine
-  = '\r\n' {
+  = endofline:('\r\n' / '\n' / '\r') {
     return {
       'type': 'EndOfLine',
-      'children': [text()],
-      'offset': location().start.offset
-    }
-  }
-  / '\n' {
-    return {
-      'type': 'EndOfLine',
-      'children': [text()],
-      'offset': location().start.offset
-    }
-  }
-  / '\r' {
-    return {
-      'type': 'EndOfLine',
-      'children': [text()],
+      'children': [endofline],
       'offset': location().start.offset
     }
   }
