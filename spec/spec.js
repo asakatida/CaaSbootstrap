@@ -1,80 +1,92 @@
 const Ajv = require('ajv');
 const app = require('../app').app;
 const fs = require('fs');
+const path = require('path');
 const request = require('supertest')
 
 const ajv = new Ajv();
 
-describe("Meta grammar endpoint", function() {
-  it("loads the endpoint", function(done) {
-    var server;
+const PORT = process.env.PORT || 8080;
 
-    server = app.listen(function() {
-      request('http://localhost:' + server.address().port)
-        .get('/api/peg/localhost:' + server.address().port + '/resources/peg')
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect(JSON.parse, done);
-    });
+describe("Meta grammar endpoint", function() {
+  var server = app.listen(PORT);
+
+  it("loads the endpoint", function(done) {
+    request('http://localhost:' + PORT)
+      .get('/api/peg/localhost:' + PORT + '/resources/peg')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .then(done).catch(function(err) {
+        fail(err);
+        done();
+      });
   });
 
   it("is equal to static result", function(done) {
-    var server;
-
-    server = app.listen(function() {
-      request('http://localhost:' + server.address().port)
-        .get('/api/peg/localhost:' + server.address().port + '/resources/peg')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .then(function (msg) {
-          expect(JSON.parse(msg)).toEqual(JSON.parse(fs.readFileSync('static.json')));
+    request('http://localhost:' + PORT)
+      .get('/api/peg/localhost:' + PORT + '/resources/peg')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .then(function (res) {
+        fs.readFile(path.join(__dirname, 'static.json'), 'utf8', function(err, data) {
+          if (err) {
+            fail(err);
+            done();
+            return;
+          }
+          expect(JSON.parse(data)).toEqual(res.body);
           done();
-      }, fail);
-    });
+        })
+      }).catch(function(err) {
+        fail(err);
+        done();
+      });
   });
 
   it("passes the grammar schema", function(done) {
-    var server;
-
-    server = app.listen(function() {
-      request('http://localhost:' + server.address().port)
-        .get('/api/peg/localhost:' + server.address().port + '/resources/peg')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .then(function (msg) {
-          request('http://localhost:' + server.address().port)
-            .get('/api/schema')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .then(function (schema) {
-          expect(
-            ajv.validate(JSON.parse(schema), JSON.parse(msg))).toBeTruthy();
-          done();
-        }, fail);
-      }, fail);
+    request('http://localhost:' + PORT)
+      .get('/api/peg/localhost:' + PORT + '/resources/peg')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .then(function (res) {
+        request('http://localhost:' + PORT)
+          .get('/api/schema')
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .then(function (schema) {
+        expect(ajv.validate(schema.body, res.body)).toBeTruthy();
+        done();
+      }).catch(function(err) {
+        fail(err);
+        done();
+      });
+    }).catch(function(err) {
+      fail(err);
+      done();
     });
   });
 
   it("passes the PEG grammar schema", function(done) {
-    var server;
-
-    server = app.listen(function() {
-      request('http://localhost:' + server.address().port)
-        .get('/api/peg/localhost:' + server.address().port + '/resources/peg')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .then(function (msg) {
-          request('http://localhost:' + server.address().port)
-            .get('/api/peg/schema')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .then(function (schema) {
-          expect(
-            ajv.validate(JSON.parse(schema), JSON.parse(msg))).toBeTruthy();
-          done();
-        }, fail);
-      }, fail);
+    request('http://localhost:' + PORT)
+      .get('/api/peg/localhost:' + PORT + '/resources/peg')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .then(function (res) {
+        request('http://localhost:' + PORT)
+          .get('/api/peg/schema')
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .then(function (schema) {
+        expect(ajv.validate(schema.body, res.body)).toBeTruthy();
+        done();
+      }).catch(function(err) {
+        fail(err);
+        done();
+      });
+    }).catch(function(err) {
+      fail(err);
+      done();
     });
   });
 });

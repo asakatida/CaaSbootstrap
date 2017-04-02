@@ -5,7 +5,7 @@
   "type": "object",
   "allOf": [
     {
-      "$ref": "schema.json#"
+      "$ref": "#/definitions/node"
     },
     {
       "properties": {
@@ -36,10 +36,48 @@
     }
   ],
   "definitions": {
+    "nodeArray": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "#/definitions/nodeArray"
+          },
+          {
+            "$ref": "#/definitions/node"
+          }
+        ]
+      }
+    },
+    "node": {
+      "type": "object",
+      "required": [
+        "type",
+        "children",
+        "offset"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "pattern": "^\\w+$"
+        },
+        "children": {
+          "$ref": "#/definitions/nodeArray"
+        },
+        "offset": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
     "definition": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -69,7 +107,7 @@
     "expression": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -107,7 +145,7 @@
     "sequence": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -129,7 +167,7 @@
     "prefix": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -174,7 +212,7 @@
     "suffix": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -222,7 +260,7 @@
     "primary": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -284,7 +322,7 @@
     "identifier": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -317,7 +355,7 @@
     "identstart": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -395,7 +433,7 @@
     "identcont": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -437,7 +475,7 @@
     "literal": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -504,7 +542,7 @@
     "class": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -544,7 +582,7 @@
     "range": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -587,7 +625,7 @@
     "char": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -612,7 +650,7 @@
     "leftarrow": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -641,7 +679,7 @@
     "slash": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -670,7 +708,7 @@
     "and": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -699,7 +737,7 @@
     "not": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -728,7 +766,7 @@
     "question": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -757,7 +795,7 @@
     "star": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -786,7 +824,7 @@
     "plus": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -815,7 +853,7 @@
     "open": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -844,7 +882,7 @@
     "close": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -873,7 +911,7 @@
     "dot": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -902,7 +940,7 @@
     "spacing": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -931,7 +969,7 @@
     "comment": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -964,7 +1002,7 @@
     "space": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -998,7 +1036,7 @@
     "endofline": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
@@ -1026,7 +1064,7 @@
     "endoffile": {
       "allOf": [
         {
-          "$ref": "schema.json#"
+          "$ref": "#/definitions/node"
         },
         {
           "properties": {
