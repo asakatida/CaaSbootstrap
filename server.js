@@ -1,5 +1,3 @@
-'use strict';
-
 const app = require('./app').app;
 const http = require('http');
 const winston = require('winston')

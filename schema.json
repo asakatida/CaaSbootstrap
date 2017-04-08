@@ -1,43 +1,50 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "A syntax tree",
+  "description": "A generic syntax tree",
   "id": "https://github.com/grandquista/CaaSbootstrap/schema.json",
+  "additionalProperties": { "$ref": "#/definitions/element" },
   "definitions": {
+    "element": {
+      "anyOf": [
+        { "$ref": "#" },
+        { "$ref": "#/definitions/nodeArray" },
+        { "$ref": "#/definitions/text" }
+      ]
+    },
     "nodeArray": {
-      "type": "array",
-      "items": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "$ref": "#/definitions/nodeArray"
-          },
-          {
-            "$ref": "#"
-          }
-        ]
-      }
+      "items": { "$ref": "#/definitions/element" },
+      "type": "array"
+    },
+    "text": {
+      "properties": {
+        "additionalProperties": false,
+        "offset": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "text": {
+          "pattern": "^\\w+$",
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "type",
+        "offset"
+      ],
+      "type": "object"
     }
   },
-  "type": "object",
-  "required": [
-    "type",
-    "children",
-    "offset"
-  ],
   "properties": {
+    "text": { "$ref": "#/definitions/text" },
     "type": {
-      "type": "string",
-      "pattern": "^\\w+$"
-    },
-    "children": {
-      "$ref": "#/definitions/nodeArray"
-    },
-    "offset": {
-      "type": "integer",
-      "minimum": 0
+      "pattern": "^\\w+$",
+      "type": "string"
     }
   },
-  "additionalProperties": false
+  "required": [ "type" ],
+  "type": "object"
 }

@@ -3,371 +3,212 @@
   "description": "A PEG syntax tree",
   "id": "https://github.com/grandquista/CaaSbootstrap/peg.schema",
   "type": "object",
-  "allOf": [
-    {
-      "$ref": "#/definitions/node"
-    },
-    {
-      "properties": {
-        "type": {
-          "enum": [
-            "Grammar"
-          ]
-        },
-        "children": {
-          "type": "array",
-          "items": [
-            {
-              "$ref": "#/definitions/spacing"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/definition"
-              },
-              "minItems": 1
-            },
-            {
-              "$ref": "#/definitions/endoffile"
-            }
-          ]
-        }
-      }
-    }
+  "required": [
+    "type",
+    "spacing",
+    "definitions",
+    "endoffile"
   ],
-  "definitions": {
-    "nodeArray": {
-      "type": "array",
-      "items": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "$ref": "#/definitions/nodeArray"
-          },
-          {
-            "$ref": "#/definitions/node"
-          }
-        ]
-      }
+  "properties": {
+    "type": {
+      "enum": [
+        "Grammar"
+      ]
     },
-    "node": {
+    "spacing": { "$ref": "#/definitions/Spacing" },
+    "definitions": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Definition" },
+      "minItems": 1
+    },
+    "endoffile": { "$ref": "#/definitions/EndOfFile" }
+  },
+  "definitions": {
+    "Text": {
       "type": "object",
       "required": [
         "type",
-        "children",
+        "text",
         "offset"
       ],
       "properties": {
         "type": {
-          "type": "string",
-          "pattern": "^\\w+$"
+          "enum": [
+            "Text"
+          ]
         },
-        "children": {
-          "$ref": "#/definitions/nodeArray"
+        "text": {
+          "type": "string"
         },
         "offset": {
           "type": "integer",
           "minimum": 0
         }
-      },
-      "additionalProperties": false
+      }
     },
-    "definition": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+    "Definition": {
+      "type": "object",
+      "required": [
+        "type",
+        "identifier",
+        "leftarrow",
+        "expression"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Definition"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "Definition"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
-                  "$ref": "#/definitions/identifier"
-                },
-                {
-                  "$ref": "#/definitions/leftarrow"
-                },
-                {
-                  "$ref": "#/definitions/expression"
-                }
-              ]
+        "identifier": { "$ref": "#/definitions/Identifier" },
+        "leftarrow": { "$ref": "#/definitions/LEFTARROW" },
+        "expression": { "$ref": "#/definitions/Expression" }
+      }
+    },
+    "Expression": {
+      "type": "object",
+      "required": [
+        "type",
+        "sequence",
+        "alternates"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Expression"
+          ]
+        },
+        "sequence": { "$ref": "#/definitions/Sequence" },
+        "alternates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "slash",
+              "sequence"
+            ],
+            "properties": {
+              "slash": { "$ref": "#/definitions/SLASH" },
+              "sequence": { "$ref": "#/definitions/Sequence" }
             }
           }
         }
-      ]
+      }
     },
-    "expression": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+    "Sequence": {
+      "type": "object",
+      "required": [
+        "type",
+        "prefixes"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Sequence"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "Expression"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
-                  "$ref": "#/definitions/sequence"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "array",
-                    "items": [
-                      {
-                        "$ref": "#/definitions/slash"
-                      },
-                      {
-                        "$ref": "#/definitions/sequence"
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          }
+        "prefixes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Prefix" }
         }
-      ]
+      }
     },
-    "sequence": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+    "Prefix": {
+      "type": "object",
+      "required": [
+        "type",
+        "suffix"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Prefix"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "Sequence"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/prefix"
-              }
-            }
-          }
-        }
-      ]
+        "and": { "$ref": "#/definitions/AND" },
+        "not": { "$ref": "#/definitions/NOT" },
+        "suffix": { "$ref": "#/definitions/Suffix" }
+      }
     },
-    "prefix": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+    "Suffix": {
+      "type": "object",
+      "required": [
+        "type",
+        "primary"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Suffix"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "Prefix"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "anyOf": [
-                {
-                  "items": [
-                    {
-                      "anyOf": [
-                        {
-                          "$ref": "#/definitions/and"
-                        },
-                        {
-                          "$ref": "#/definitions/not"
-                        }
-                      ]
-                    },
-                    {
-                      "$ref": "#/definitions/suffix"
-                    }
-                  ]
-                },
-                {
-                  "items": [
-                    {
-                      "$ref": "#/definitions/suffix"
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        }
-      ]
+        "primary": { "$ref": "#/definitions/Primary" },
+        "question": { "$ref": "#/definitions/QUESTION" },
+        "star": { "$ref": "#/definitions/STAR" },
+        "plus": { "$ref": "#/definitions/PLUS" }
+      }
     },
-    "suffix": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+    "Primary": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Primary"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "Suffix"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "anyOf": [
-                {
-                  "items": [
-                    {
-                      "$ref": "#/definitions/primary"
-                    },
-                    {
-                      "anyOf": [
-                        {
-                          "$ref": "#/definitions/question"
-                        },
-                        {
-                          "$ref": "#/definitions/star"
-                        },
-                        {
-                          "$ref": "#/definitions/plus"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "items": [
-                    {
-                      "$ref": "#/definitions/primary"
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        }
-      ]
+        "identifier": { "$ref": "#/definitions/Identifier" },
+        "open": { "$ref": "#/definitions/OPEN" },
+        "expression": { "$ref": "#/definitions/Expression" },
+        "close": { "$ref": "#/definitions/CLOSE" },
+        "literal": { "$ref": "#/definitions/Literal" },
+        "class": { "$ref": "#/definitions/Class" },
+        "dot": { "$ref": "#/definitions/DOT" }
+      }
     },
-    "primary": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+    "Identifier": {
+      "type": "object",
+      "required": [
+        "type",
+        "identstart",
+        "identconts",
+        "spacing"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Identifier"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "Primary"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "anyOf": [
-                {
-                  "items": [
-                    {
-                      "$ref": "#/definitions/identifier"
-                    }
-                  ]
-                },
-                {
-                  "items": [
-                    {
-                      "$ref": "#/definitions/open"
-                    },
-                    {
-                      "$ref": "#/definitions/expression"
-                    },
-                    {
-                      "$ref": "#/definitions/close"
-                    }
-                  ]
-                },
-                {
-                  "items": [
-                    {
-                      "$ref": "#/definitions/literal"
-                    }
-                  ]
-                },
-                {
-                  "items": [
-                    {
-                      "$ref": "#/definitions/class"
-                    }
-                  ]
-                },
-                {
-                  "items": [
-                    {
-                      "$ref": "#/definitions/dot"
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        }
-      ]
+        "identstart": { "$ref": "#/definitions/IdentStart" },
+        "identconts": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/IdentCont" }
+        },
+        "spacing": { "$ref": "#/definitions/Spacing" }
+      }
     },
-    "identifier": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+    "IdentStart": {
+      "type": "object",
+      "required": [
+        "type",
+        "text"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "IdentStart"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "Identifier"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
-                  "$ref": "#/definitions/identstart"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/identcont"
-                  }
-                },
-                {
-                  "$ref": "#/definitions/spacing"
-                }
-              ]
-            }
-          }
-        }
-      ]
-    },
-    "identstart": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
-        },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "IdentStart"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
+        "text": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "enum": [
                     "a",
                     "b",
@@ -424,662 +265,655 @@
                     "_"
                   ]
                 }
-              ]
+              }
             }
-          }
+          ]
         }
-      ]
+      }
     },
-    "identcont": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+    "IdentCont": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "IdentCont"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "IdentCont"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
-                  "anyOf": [
-                    {
-                      "enum": [
-                        "0",
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7",
-                        "8",
-                        "9"
-                      ]
-                    },
-                    {
-                      "$ref": "#/definitions/identstart"
-                    }
+        "text": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "enum": [
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "9"
                   ]
                 }
-              ]
+              }
             }
-          }
-        }
-      ]
-    },
-    "literal": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "Literal"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "anyOf": [
-                {
-                  "items": [
-                    {
-                      "enum": [
-                        "'"
-                      ]
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/char"
-                      }
-                    },
-                    {
-                      "enum": [
-                        "'"
-                      ]
-                    },
-                    {
-                      "$ref": "#/definitions/spacing"
-                    }
-                  ]
-                },
-                {
-                  "items": [
-                    {
-                      "enum": [
-                        "\""
-                      ]
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/char"
-                      }
-                    },
-                    {
-                      "enum": [
-                        "\""
-                      ]
-                    },
-                    {
-                      "$ref": "#/definitions/spacing"
-                    }
+        "identstart": { "$ref": "#/definitions/IdentStart" }
+      }
+    },
+    "Literal": {
+      "type": "object",
+      "required": [
+        "type",
+        "open",
+        "chars",
+        "close",
+        "spacing"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Literal"
+          ]
+        },
+        "open": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "enum": [
+                    "\""
                   ]
                 }
-              ]
+              }
             }
-          }
-        }
-      ]
-    },
-    "class": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "Class"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
+        "chars": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Char" }
+        },
+        "close": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "enum": [
+                    "\""
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "spacing": { "$ref": "#/definitions/Spacing" }
+      }
+    },
+    "Class": {
+      "type": "object",
+      "required": [
+        "type",
+        "open",
+        "ranges",
+        "close",
+        "spacing"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Class"
+          ]
+        },
+        "open": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "enum": [
                     "["
                   ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/range"
-                  }
-                },
-                {
+                }
+              }
+            }
+          ]
+        },
+        "ranges": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Range" }
+        },
+        "close": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "enum": [
                     "]"
                   ]
-                },
-                {
-                  "$ref": "#/definitions/spacing"
                 }
-              ]
+              }
             }
-          }
-        }
-      ]
-    },
-    "range": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "Range"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "anyOf": [
-                {
-                  "items": [
-                    {
-                      "$ref": "#/definitions/char"
-                    },
-                    {
-                      "enum": [
-                        "-"
-                      ]
-                    },
-                    {
-                      "$ref": "#/definitions/char"
-                    }
-                  ]
-                },
-                {
-                  "items": [
-                    {
-                      "$ref": "#/definitions/char"
-                    }
+        "spacing": { "$ref": "#/definitions/Spacing" }
+      }
+    },
+    "Range": {
+      "type": "object",
+      "required": [
+        "type",
+        "start"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Range"
+          ]
+        },
+        "start": { "$ref": "#/definitions/Char" },
+        "text": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "enum": [
+                    "-"
                   ]
                 }
-              ]
+              }
             }
-          }
-        }
-      ]
-    },
-    "char": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "Char"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
+        "end": { "$ref": "#/definitions/Char" }
+      }
+    },
+    "Char": {
+      "type": "object",
+      "required": [
+        "type",
+        "text"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Char"
+          ]
+        },
+        "text": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "type": "string",
-                  "pattern": "^(\\\\([nrt'\"\\[\\]\\\\]|[0-2][0-7][0-7|[0-7][0-7]?])|[^\\\\])$"
+                  "pattern": "^(\\\\([nrt''\\[\\]\\\\]|[0-2][0-7][0-7|[0-7][0-7]?])|[^\\\\])$"
                 }
-              ]
+              }
             }
-          }
+          ]
         }
-      ]
+      }
     },
-    "leftarrow": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+    "LEFTARROW": {
+      "type": "object",
+      "required": [
+        "type",
+        "leftarrow",
+        "spacing"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "LEFTARROW"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "LEFTARROW"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
+        "text": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "enum": [
                     "<-"
                   ]
-                },
-                {
-                  "$ref": "#/definitions/spacing"
                 }
-              ]
+              }
             }
-          }
-        }
-      ]
-    },
-    "slash": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "SLASH"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
+        "spacing": { "$ref": "#/definitions/Spacing" }
+      }
+    },
+    "SLASH": {
+      "type": "object",
+      "required": [
+        "type",
+        "slash",
+        "spacing"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "SLASH"
+          ]
+        },
+        "text": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "enum": [
                     "/"
                   ]
-                },
-                {
-                  "$ref": "#/definitions/spacing"
                 }
-              ]
+              }
             }
-          }
-        }
-      ]
-    },
-    "and": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "AND"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
+        "spacing": { "$ref": "#/definitions/Spacing" }
+      }
+    },
+    "AND": {
+      "type": "object",
+      "required": [
+        "type",
+        "and",
+        "spacing"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "AND"
+          ]
+        },
+        "text": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "enum": [
                     "&"
                   ]
-                },
-                {
-                  "$ref": "#/definitions/spacing"
                 }
-              ]
+              }
             }
-          }
-        }
-      ]
-    },
-    "not": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "NOT"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
+        "spacing": { "$ref": "#/definitions/Spacing" }
+      }
+    },
+    "NOT": {
+      "type": "object",
+      "required": [
+        "type",
+        "not",
+        "spacing"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "NOT"
+          ]
+        },
+        "not": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "enum": [
                     "!"
                   ]
-                },
-                {
-                  "$ref": "#/definitions/spacing"
                 }
-              ]
+              }
             }
-          }
-        }
-      ]
-    },
-    "question": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "QUESTION"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
+        "spacing": { "$ref": "#/definitions/Spacing" }
+      }
+    },
+    "QUESTION": {
+      "type": "object",
+      "required": [
+        "type",
+        "question",
+        "spacing"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "QUESTION"
+          ]
+        },
+        "text": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "enum": [
                     "?"
                   ]
-                },
-                {
-                  "$ref": "#/definitions/spacing"
                 }
-              ]
+              }
             }
-          }
-        }
-      ]
-    },
-    "star": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "STAR"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
+        "spacing": { "$ref": "#/definitions/Spacing" }
+      }
+    },
+    "STAR": {
+      "type": "object",
+      "required": [
+        "type",
+        "star",
+        "spacing"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "STAR"
+          ]
+        },
+        "text": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "enum": [
                     "*"
                   ]
-                },
-                {
-                  "$ref": "#/definitions/spacing"
                 }
-              ]
+              }
             }
-          }
-        }
-      ]
-    },
-    "plus": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "PLUS"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
+        "spacing": { "$ref": "#/definitions/Spacing" }
+      }
+    },
+    "PLUS": {
+      "type": "object",
+      "required": [
+        "type",
+        "plus",
+        "spacing"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "PLUS"
+          ]
+        },
+        "text": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "enum": [
                     "+"
                   ]
-                },
-                {
-                  "$ref": "#/definitions/spacing"
                 }
-              ]
+              }
             }
-          }
-        }
-      ]
-    },
-    "open": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "OPEN"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
+        "spacing": { "$ref": "#/definitions/Spacing" }
+      }
+    },
+    "OPEN": {
+      "type": "object",
+      "required": [
+        "type",
+        "open",
+        "spacing"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "OPEN"
+          ]
+        },
+        "text": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "enum": [
                     "("
                   ]
-                },
-                {
-                  "$ref": "#/definitions/spacing"
                 }
-              ]
+              }
             }
-          }
-        }
-      ]
-    },
-    "close": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "CLOSE"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
+        "spacing": { "$ref": "#/definitions/Spacing" }
+      }
+    },
+    "CLOSE": {
+      "type": "object",
+      "required": [
+        "type",
+        "close",
+        "spacing"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "CLOSE"
+          ]
+        },
+        "text": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "enum": [
                     ")"
                   ]
-                },
-                {
-                  "$ref": "#/definitions/spacing"
                 }
-              ]
+              }
             }
-          }
-        }
-      ]
-    },
-    "dot": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "DOT"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
+        "spacing": { "$ref": "#/definitions/Spacing" }
+      }
+    },
+    "DOT": {
+      "type": "object",
+      "required": [
+        "type",
+        "dot",
+        "spacing"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "DOT"
+          ]
+        },
+        "dot": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "enum": [
                     "."
                   ]
-                },
-                {
-                  "$ref": "#/definitions/spacing"
                 }
-              ]
-            }
-          }
-        }
-      ]
-    },
-    "spacing": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
-        },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "Spacing"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/space"
-                  },
-                  {
-                    "$ref": "#/definitions/comment"
-                  }
-                ]
               }
             }
+          ]
+        },
+        "spacing": { "$ref": "#/definitions/Spacing" }
+      }
+    },
+    "Spacing": {
+      "type": "object",
+      "required": [
+        "type",
+        "spacing"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Spacing"
+          ]
+        },
+        "spacing": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/definitions/Space" },
+              { "$ref": "#/definitions/Comment" }
+            ]
           }
         }
-      ]
+      }
     },
-    "comment": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+    "Comment": {
+      "type": "object",
+      "required": [
+        "type",
+        "start",
+        "content",
+        "endofline"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Comment"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "Comment"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
-                  "enum": ["#"]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                {
-                  "$ref": "#/definitions/endofline"
-                }
-              ]
-            }
-          }
-        }
-      ]
-    },
-    "space": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
-        },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "Space"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
-                  "anyOf": [
-                    {
-                      "enum": [
-                        " ",
-                        "\t"
-                      ]
-                    },
-                    {
-                      "$ref": "#/definitions/endofline"
-                    }
+        "start": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "enum": [
+                    "#"
                   ]
                 }
-              ]
+              }
             }
-          }
-        }
-      ]
-    },
-    "endofline": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
+          ]
         },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "EndOfLine"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "items": [
-                {
+        "content": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Text" }
+        },
+        "endofline": { "$ref": "#/definitions/EndOfLine" }
+      }
+    },
+    "Space": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Space"
+          ]
+        },
+        "text": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "enum": [
+                    " ",
+                    "\t"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "endofline": { "$ref": "#/definitions/EndOfLine" }
+      }
+    },
+    "EndOfLine": {
+      "type": "object",
+      "required": [
+        "type",
+        "text"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "EndOfLine"
+          ]
+        },
+        "text": {
+          "allOf": [
+            { "$ref": "#/definitions/Text" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
                   "enum": [
                     "\r",
                     "\r\n",
                     "\n"
                   ]
                 }
-              ]
+              }
             }
-          }
+          ]
         }
-      ]
+      }
     },
-    "endoffile": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/node"
-        },
-        {
-          "properties": {
-            "type": {
-              "enum": [
-                "EndOfFile"
-              ]
-            },
-            "children": {
-              "type": "array",
-              "maxItems": 0
-            }
-          }
+    "EndOfFile": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "EndOfFile"
+          ]
         }
-      ]
+      }
     }
   }
 }

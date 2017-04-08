@@ -1,237 +1,305 @@
+{
+  function makeText() {
+    return {
+      type: 'Text',
+      text: text(),
+      offset: location().start.offset
+    };
+  }
+}
+
 // Hierarchical syntax
 Grammar
-  = grammar:(Spacing Definition+ EndOfFile) {
+  = spacing:Spacing definitions:Definition+ endoffile:EndOfFile {
     return {
-      'type': 'Grammar',
-      'children': grammar,
-      'offset': location().start.offset
-    }
+      type: 'Grammar',
+      spacing: spacing,
+      definitions: definitions,
+      endoffile: endoffile,
+    };
   }
 Definition
-  = definition:(Identifier LEFTARROW Expression) {
+  = identifier:Identifier leftarrow:LEFTARROW expression:Expression {
     return {
-      'type': 'Definition',
-      'children': definition,
-      'offset': location().start.offset
-    }
+      type: 'Definition',
+      identifier: identifier,
+      leftarrow: leftarrow,
+      expression: expression
+    };
   }
 Expression
-  = expression:(Sequence (SLASH Sequence)*) {
+  = first:Sequence alternates:(slash:SLASH sequence:Sequence {
     return {
-      'type': 'Expression',
-      'children': expression,
-      'offset': location().start.offset
-    }
+      slash: slash,
+      sequence: sequence
+    };
+  })* {
+    return {
+      type: 'Expression',
+      sequence: first,
+      alternates: alternates
+    };
   }
 Sequence
-  = prefix:Prefix* {
+  = prefixes:Prefix* {
     return {
-      'type': 'Sequence',
-      'children': prefix,
-      'offset': location().start.offset
-    }
+      type: 'Sequence',
+      prefixes: prefixes
+    };
   }
 Prefix
   = prefix:(AND / NOT)? suffix:Suffix {
-    return {
-      'type': 'Prefix',
-      'children': prefix ? [prefix, suffix] : [suffix],
-      'offset': location().start.offset
+    if (prefix) {
+      return {
+        type: 'Prefix',
+        prefix: prefix,
+        suffix: suffix
+      };
     }
+    return {
+      type: 'Prefix',
+      suffix: suffix
+    };
   }
 Suffix
   = primary:Primary suffix:(QUESTION / STAR / PLUS)? {
-    return {
-      'type': 'Suffix',
-      'children': suffix ? [primary, suffix] : [primary],
-      'offset': location().start.offset
+    if (suffix) {
+      return {
+        type: 'Suffix',
+        primary: primary,
+        suffix: suffix
+      };
     }
+    return {
+      type: 'Suffix',
+      primary: primary
+    };
   }
 Primary
-  = primary:(identifier:Identifier !LEFTARROW { return identifier }
-  / OPEN Expression CLOSE / Literal / Class / DOT) {
+  = identifier:Identifier !LEFTARROW {
     return {
-      'type': 'Primary',
-      'children': primary instanceof Array ? primary : [primary],
-      'offset': location().start.offset
-    }
+      type: 'Primary',
+      identifier: identifier
+    };
+  }
+  / open:OPEN expression:Expression close:CLOSE {
+    return {
+      type: 'Primary',
+      open: open,
+      expression: expression,
+      close: close
+    };
+  }
+  / literal:Literal {
+    return {
+      type: 'Primary',
+      literal: literal
+    };
+  }
+  / cls:Class {
+    return {
+      type: 'Primary',
+      class: cls
+    };
+  }
+  / dot:DOT {
+    return {
+      type: 'Primary',
+      dot: dot
+    };
   }
 // Lexical syntax
 Identifier
-  = identifier:(IdentStart IdentCont* Spacing) {
+  = identstart:IdentStart identconts:IdentCont* spacing:Spacing {
     return {
-      'type': 'Identifier',
-      'children': identifier,
-      'offset': location().start.offset
-    }
+      type: 'Identifier',
+      identstart: identstart,
+      identconts: identconts,
+      spacing: spacing
+    };
   }
 IdentStart
-  = identstart:[a-z_]i {
+  = text:([a-z_]i { return makeText(); }) {
     return {
-      'type': 'IdentStart',
-      'children': [identstart],
-      'offset': location().start.offset
-    }
+      type: 'IdentStart',
+      text: text
+    };
   }
 IdentCont
-  = identcont:(IdentStart / [0-9]) {
+  = identstart:IdentStart {
     return {
-      'type': 'IdentCont',
-      'children': [identcont],
-      'offset': location().start.offset
-    }
+      type: 'IdentCont',
+      identstart: identstart
+    };
+  }
+  / [0-9] {
+    return {
+      type: 'IdentCont',
+      text: makeText()
+    };
   }
 Literal
-  = literal:(
-    ['] (!['] char:Char { return char })* ['] Spacing
-    / ["] (!["] char:Char { return char })* ["] Spacing) {
+  = open:(['] { return makeText(); }) chars:(!['] char:Char { return char; })* close:(['] { return makeText(); }) spacing:Spacing
+  / open:(["] { return makeText(); }) chars:(!["] char:Char { return char; })* close:(["] { return makeText(); }) spacing:Spacing {
     return {
-      'type': 'Literal',
-      'children': literal,
-      'offset': location().start.offset
-    }
+      type: 'Literal',
+      open: open,
+      chars: chars,
+      close: close,
+      spacing: spacing
+    };
   }
 Class
-  = cls:('[' (!']' range:Range { return range })* ']' Spacing) {
+  = open:('[' { return makeText(); }) ranges:(!']' range:Range { return range; })* close:(']' { return makeText(); }) spacing:Spacing {
     return {
-      'type': 'Class',
-      'children': cls,
-      'offset': location().start.offset
-    }
+      type: 'Class',
+      open: open,
+      ranges: ranges,
+      close: close,
+      spacing: spacing
+    };
   }
 Range
-  = range:(Char '-' Char / Char) {
+  = start:Char text:('-' { return makeText(); }) end:Char {
     return {
-      'type': 'Range',
-      'children': range instanceof Array ? range : [range],
-      'offset': location().start.offset
-    }
+      type: 'Range',
+      start: start,
+      text: text,
+      end: end
+    };
+  }
+  / start:Char {
+    return {
+      type: 'Range',
+      start: start
+    };
   }
 Char
-  = ('\\' [nrt'"\[\]\\] / '\\' [0-2][0-7][0-7] / '\\' [0-7][0-7]? / !'\\' .) {
+  = '\\' [nrt'"\[\]\\] / '\\' [0-2][0-7][0-7] / '\\' [0-7][0-7]? / !'\\' . {
     return {
-      'type': 'Char',
-      'children': [text()],
-      'offset': location().start.offset
-    }
+      type: 'Char',
+      text: makeText()
+    };
   }
 LEFTARROW
-  = leftarrow:('<-' Spacing) {
+  = text:('<-' { return makeText(); }) spacing:Spacing {
     return {
-      'type': 'LEFTARROW',
-      'children': leftarrow,
-      'offset': location().start.offset
-    }
+      type: 'LEFTARROW',
+      text: text,
+      spacing: spacing
+    };
   }
 SLASH
-  = slash:('/' Spacing) {
+  = text:('/' { return makeText(); }) spacing:Spacing {
     return {
-      'type': 'SLASH',
-      'children': slash,
-      'offset': location().start.offset
-    }
+      type: 'SLASH',
+      text: text,
+      spacing: spacing
+    };
   }
 AND
-  = and:('&' Spacing) {
+  = text:('&' { return makeText(); }) spacing:Spacing {
     return {
-      'type': 'AND',
-      'children': and,
-      'offset': location().start.offset
-    }
+      type: 'AND',
+      text: text,
+      spacing: spacing
+    };
   }
 NOT
-  = not:('!' Spacing) {
+  = text:('!' { return makeText(); }) spacing:Spacing {
     return {
-      'type': 'NOT',
-      'children': not,
-      'offset': location().start.offset
-    }
+      type: 'NOT',
+      text: text,
+      spacing: spacing
+    };
   }
 QUESTION
-  = question:('?' Spacing) {
+  = text:('?' { return makeText(); }) spacing:Spacing {
     return {
-      'type': 'QUESTION',
-      'children': question,
-      'offset': location().start.offset
-    }
+      type: 'QUESTION',
+      text: text,
+      spacing: spacing
+    };
   }
 STAR
-  = star:('*' Spacing) {
+  = text:('*' { return makeText(); }) spacing:Spacing {
     return {
-      'type': 'STAR',
-      'children': star,
-      'offset': location().start.offset
-    }
+      type: 'STAR',
+      text: text,
+      spacing: spacing
+    };
   }
 PLUS
-  = plus:('+' Spacing) {
+  = text:('+' { return makeText(); }) spacing:Spacing {
     return {
-      'type': 'PLUS',
-      'children': plus,
-      'offset': location().start.offset
-    }
+      type: 'PLUS',
+      text: text,
+      spacing: spacing
+    };
   }
 OPEN
-  = open:('(' Spacing) {
+  = text:('(' { return makeText(); }) spacing:Spacing {
     return {
-      'type': 'OPEN',
-      'children': open,
-      'offset': location().start.offset
-    }
+      type: 'OPEN',
+      text: text,
+      spacing: spacing
+    };
   }
 CLOSE
-  = close:(')' Spacing) {
+  = text:(')' { return makeText(); }) spacing:Spacing {
     return {
-      'type': 'CLOSE',
-      'children': close,
-      'offset': location().start.offset
-    }
+      type: 'CLOSE',
+      text: text,
+      spacing: spacing
+    };
   }
 DOT
-  = dot:('.' Spacing) {
+  = text:('.' { return makeText(); }) spacing:Spacing {
     return {
-      'type': 'DOT',
-      'children': dot,
-      'offset': location().start.offset
-    }
+      type: 'DOT',
+      text: text,
+      spacing: spacing
+    };
   }
 Spacing
-  = spacing:(Space / Comment)* {
+  = spaces:(Space / Comment)* {
     return {
-      'type': 'Spacing',
-      'children': spacing,
-      'offset': location().start.offset
-    }
+      type: 'Spacing',
+      spaces: spaces
+    };
   }
 Comment
-  = comment:('#' (!EndOfLine dot:. { return dot })* EndOfLine) {
+  = start:('#' { return makeText(); }) content:(!EndOfLine . { return makeText(); })* endofline:EndOfLine {
     return {
-      'type': 'Comment',
-      'children': comment,
-      'offset': location().start.offset
-    }
+      type: 'Comment',
+      start: start,
+      content: content,
+      endofline: endofline
+    };
   }
 Space
-  = space:(' ' / '\t' / EndOfLine) {
+  = (' ' / '\t') {
     return {
-      'type': 'Space',
-      'children': [space],
-      'offset': location().start.offset
-    }
+      type: 'Space',
+      text: makeText()
+    };
+  }
+  / endofline:EndOfLine {
+    return {
+      type: 'Space',
+      endofline: endofline
+    };
   }
 EndOfLine
-  = endofline:('\r\n' / '\n' / '\r') {
+  = ('\r\n' / '\n' / '\r') {
     return {
-      'type': 'EndOfLine',
-      'children': [endofline],
-      'offset': location().start.offset
-    }
+      type: 'EndOfLine',
+      endofline: makeText()
+    };
   }
 EndOfFile
   = !. {
     return {
-      'type': 'EndOfFile',
-      'children': [],
-      'offset': location().start.offset
-    }
+      type: 'EndOfFile',
+    };
   }

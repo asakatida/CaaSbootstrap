@@ -1,8 +1,10 @@
+'use strict';
+
 const Ajv = require('ajv');
 const app = require('../app').app;
 const fs = require('fs');
 const path = require('path');
-const request = require('supertest')
+const request = require('supertest');
 
 const ajv = new Ajv();
 
