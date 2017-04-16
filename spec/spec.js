@@ -15,7 +15,8 @@ describe("Meta grammar endpoint", function() {
 
   it("loads the endpoint", function(done) {
     request('http://localhost:' + PORT)
-      .get('/api/peg/localhost:' + PORT + '/resources/peg')
+      .get('/api/peg/peg')
+      .query({ src: 'http://localhost:' + PORT + '/resources/peg.peg' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
@@ -27,7 +28,8 @@ describe("Meta grammar endpoint", function() {
 
   it("is equal to static result", function(done) {
     request('http://localhost:' + PORT)
-      .get('/api/peg/localhost:' + PORT + '/resources/peg')
+      .get('/api/peg/peg')
+      .query({ src: 'http://localhost:' + PORT + '/resources/peg.peg' })
       .expect('Content-Type', /json/)
       .expect(200)
       .then(function (res) {
@@ -48,7 +50,8 @@ describe("Meta grammar endpoint", function() {
 
   it("passes the grammar schema", function(done) {
     request('http://localhost:' + PORT)
-      .get('/api/peg/localhost:' + PORT + '/resources/peg')
+      .get('/api/peg/peg')
+      .query({ src: 'http://localhost:' + PORT + '/resources/peg.peg' })
       .expect('Content-Type', /json/)
       .expect(200)
       .then(function (res) {
@@ -71,12 +74,13 @@ describe("Meta grammar endpoint", function() {
 
   it("passes the PEG grammar schema", function(done) {
     request('http://localhost:' + PORT)
-      .get('/api/peg/localhost:' + PORT + '/resources/peg')
+      .get('/api/peg/peg')
+      .query({ src: 'http://localhost:' + PORT + '/resources/peg.peg' })
       .expect('Content-Type', /json/)
       .expect(200)
       .then(function (res) {
         request('http://localhost:' + PORT)
-          .get('/api/peg/schema')
+          .get('/api/peg/peg/schema.json')
           .expect('Content-Type', /json/)
           .expect(200)
           .then(function (schema) {
