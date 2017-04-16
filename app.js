@@ -17,7 +17,7 @@ app.get('/', function (req, res) { res.render('index.pug'); });
 
 app.get('/api', function (req, res) { res.render('api.pug'); });
 
-app.get('/api/schema', function (req, res) {
+app.get('/resources/peg/schema', function (req, res) {
   res.sendFile('schema.json', {root: __dirname});
 });
 
@@ -27,11 +27,11 @@ app.get('/resources/peg', function (req, res) {
 
 app.use('/api/peg', apipeg);
 
-apipeg.get('/schema', function (req, res) {
+apipeg.get('/peg/schema', function (req, res) {
   res.type('json').sendFile('peg.schema', {root: __dirname});
 });
 
-apipeg.get('/', function (req, res) {
+apipeg.get('/peg', function (req, res) {
   if (!req.query.src) {
     return res.status(500).json({error: 'Request Failed. No query src.'});
   }
