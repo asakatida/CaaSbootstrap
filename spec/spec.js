@@ -1,7 +1,7 @@
 'use strict';
 
 const Ajv = require('ajv');
-const app = require('../app').app;
+const app = require('../app');
 const fs = require('fs');
 const path = require('path');
 const request = require('supertest');
