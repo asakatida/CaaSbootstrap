@@ -19,8 +19,8 @@ module.exports = function (req) {
         "type": "array"
       },
       "text": {
+        "additionalProperties": false,
         "properties": {
-          "additionalProperties": false,
           "offset": {
             "minimum": 0,
             "type": "integer"
