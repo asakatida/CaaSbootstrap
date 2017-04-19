@@ -56,7 +56,7 @@ describe("Meta grammar endpoint", function() {
       .expect(200)
       .then(function (res) {
         request('http://localhost:' + PORT)
-          .get('/api/schema')
+          .get('/api/peg/peg/schema/schema.json')
           .expect('Content-Type', /json/)
           .expect(200)
           .then(function (schema) {
