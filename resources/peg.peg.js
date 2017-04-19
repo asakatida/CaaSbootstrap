@@ -31,6 +31,6 @@ module.exports = function (req) {
     "Spacing <- (Space / Comment)*\n" +
     "Comment <- '#' (!EndOfLine .)* EndOfLine\n" +
     "Space <- ' ' / '\\t' / EndOfLine\n" +
-    "EndOfLine <- '\\r\\n' / '\\n' / '\\r'\\n" +
+    "EndOfLine <- '\\r\\n' / '\\n' / '\\r'\n" +
     "EndOfFile <- !.\n").toPromise()
 };

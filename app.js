@@ -3,6 +3,7 @@ const api_peg_ast = require('./api/peg/ast');
 const api_peg_ast_schema_json = require('./api/peg/ast/schema.json');
 const api_peg_peg = require('./api/peg/peg');
 const api_peg_peg_schema_json = require('./api/peg/peg/schema.json');
+const api_peg_peg_schema_schema_json = require('./api/peg/peg/schema/schema.json');
 const resources_peg_peg = require('./resources/peg.peg');
 
 const app = express();
@@ -25,6 +26,12 @@ app.get('/api/peg/ast/schema.json', function (req, res) {
 
 app.get('/api/peg/ast', function (req, res) {
   api_peg_ast(req).then(function (msg) { res.json(msg); }, function (error) {
+    res.status(500).json(error);
+  });
+});
+
+app.get('/api/peg/peg/schema/schema.json', function (req, res) {
+  api_peg_peg_schema_schema_json(req).then(function (msg) { res.json(msg); }, function (error) {
     res.status(500).json(error);
   });
 });
