@@ -5,13 +5,14 @@ module.exports = function (req) {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "description": "A generic syntax tree",
     "id": "https://" + req.hostname + req.originalUrl,
-    "additionalProperties": { "$ref": "#/definitions/element" },
+    "additionalProperties": false,
     "definitions": {
       "element": {
         "anyOf": [
           { "$ref": "#" },
           { "$ref": "#/definitions/nodeArray" },
-          { "$ref": "#/definitions/text" }
+          { "$ref": "#/definitions/text" },
+          { "enum": [ null ] }
         ]
       },
       "nodeArray": {
@@ -26,10 +27,10 @@ module.exports = function (req) {
             "type": "integer"
           },
           "text": {
-            "pattern": "^\\w+$",
             "type": "string"
           },
           "type": {
+            "pattern": "^\\w+$",
             "type": "string"
           }
         },
@@ -42,7 +43,7 @@ module.exports = function (req) {
       }
     },
     "properties": {
-      "text": { "$ref": "#/definitions/text" },
+      "fields": { "$ref": "#/definitions/element" },
       "type": {
         "pattern": "^\\w+$",
         "type": "string"

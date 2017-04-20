@@ -10,291 +10,200 @@
 
 // Hierarchical syntax
 Grammar
-  = spacing:Spacing definitions:Definition+ endoffile:EndOfFile {
+  = fields:(Spacing Definition+ EndOfFile) {
     return {
       type: 'Grammar',
-      spacing: spacing,
-      definitions: definitions,
-      endoffile: endoffile,
+      fields: fields
     };
   }
 Definition
-  = identifier:Identifier leftarrow:LEFTARROW expression:Expression {
+  = fields:(Identifier LEFTARROW Expression) {
     return {
       type: 'Definition',
-      identifier: identifier,
-      leftarrow: leftarrow,
-      expression: expression
+      fields: fields
     };
   }
 Expression
-  = first:Sequence alternates:(slash:SLASH sequence:Sequence {
-    return {
-      slash: slash,
-      sequence: sequence
-    };
-  })* {
+  = fields:(Sequence (SLASH Sequence)*) {
     return {
       type: 'Expression',
-      sequence: first,
-      alternates: alternates
+      fields: fields
     };
   }
 Sequence
-  = prefixes:Prefix* {
+  = fields:(Prefix*) {
     return {
       type: 'Sequence',
-      prefixes: prefixes
+      fields: fields
     };
   }
 Prefix
-  = prefix:(AND / NOT)? suffix:Suffix {
-    if (prefix) {
-      return {
-        type: 'Prefix',
-        prefix: prefix,
-        suffix: suffix
-      };
-    }
+  = fields:((AND / NOT)? Suffix) {
     return {
       type: 'Prefix',
-      suffix: suffix
+      fields: fields
     };
   }
 Suffix
-  = primary:Primary suffix:(QUESTION / STAR / PLUS)? {
-    if (suffix) {
-      return {
-        type: 'Suffix',
-        primary: primary,
-        suffix: suffix
-      };
-    }
+  = fields:(Primary (QUESTION / STAR / PLUS)?) {
     return {
       type: 'Suffix',
-      primary: primary
+      fields: fields
     };
   }
 Primary
-  = identifier:Identifier !LEFTARROW {
+  = fields:(Identifier !LEFTARROW / OPEN Expression CLOSE / Literal / Class / DOT) {
     return {
       type: 'Primary',
-      identifier: identifier
-    };
-  }
-  / open:OPEN expression:Expression close:CLOSE {
-    return {
-      type: 'Primary',
-      open: open,
-      expression: expression,
-      close: close
-    };
-  }
-  / literal:Literal {
-    return {
-      type: 'Primary',
-      literal: literal
-    };
-  }
-  / cls:Class {
-    return {
-      type: 'Primary',
-      class: cls
-    };
-  }
-  / dot:DOT {
-    return {
-      type: 'Primary',
-      dot: dot
+      fields: fields
     };
   }
 // Lexical syntax
 Identifier
-  = identstart:IdentStart identconts:IdentCont* spacing:Spacing {
+  = fields:(IdentStart IdentCont* Spacing) {
     return {
       type: 'Identifier',
-      identstart: identstart,
-      identconts: identconts,
-      spacing: spacing
+      fields: fields
     };
   }
 IdentStart
-  = text:([a-z_]i { return makeText(); }) {
+  = [a-z_]i {
     return {
       type: 'IdentStart',
-      text: text
+      fields: makeText()
     };
   }
 IdentCont
-  = identstart:IdentStart {
+  = fields:(IdentStart / [0-9] { return makeText(); }) {
     return {
       type: 'IdentCont',
-      identstart: identstart
-    };
-  }
-  / [0-9] {
-    return {
-      type: 'IdentCont',
-      text: makeText()
+      fields: fields
     };
   }
 Literal
-  = open:(['] { return makeText(); }) chars:(!['] char:Char { return char; })* close:(['] { return makeText(); }) spacing:Spacing
-  / open:(["] { return makeText(); }) chars:(!["] char:Char { return char; })* close:(["] { return makeText(); }) spacing:Spacing {
+  = fields:((['] { return makeText(); }) (!['] Char)* (['] { return makeText(); }) Spacing / (["] { return makeText(); }) (!["] Char)* (["] { return makeText(); }) Spacing) {
     return {
       type: 'Literal',
-      open: open,
-      chars: chars,
-      close: close,
-      spacing: spacing
+      fields: fields
     };
   }
 Class
-  = open:('[' { return makeText(); }) ranges:(!']' range:Range { return range; })* close:(']' { return makeText(); }) spacing:Spacing {
+  = fields:(('[' { return makeText(); }) (!']' Range)* (']' { return makeText(); }) Spacing) {
     return {
       type: 'Class',
-      open: open,
-      ranges: ranges,
-      close: close,
-      spacing: spacing
+      fields: fields
     };
   }
 Range
-  = start:Char text:('-' { return makeText(); }) end:Char {
+  = fields:(Char ('-' { return makeText(); }) Char / Char) {
     return {
       type: 'Range',
-      start: start,
-      text: text,
-      end: end
-    };
-  }
-  / start:Char {
-    return {
-      type: 'Range',
-      start: start
+      fields: fields
     };
   }
 Char
-  = '\\' [nrt'"\[\]\\] / '\\' [0-2][0-7][0-7] / '\\' [0-7][0-7]? / !'\\' . {
+  = ('\\' [nrt'"\[\]\\] / '\\' [0-2][0-7][0-7] / '\\' [0-7][0-7]? / !'\\' .) {
     return {
       type: 'Char',
-      text: makeText()
+      fields: makeText()
     };
   }
 LEFTARROW
-  = text:('<-' { return makeText(); }) spacing:Spacing {
+  = fields:(('<-' { return makeText(); }) Spacing) {
     return {
       type: 'LEFTARROW',
-      text: text,
-      spacing: spacing
+      fields: fields
     };
   }
 SLASH
-  = text:('/' { return makeText(); }) spacing:Spacing {
+  = fields:(('/' { return makeText(); }) Spacing) {
     return {
       type: 'SLASH',
-      text: text,
-      spacing: spacing
+      fields: fields
     };
   }
 AND
-  = text:('&' { return makeText(); }) spacing:Spacing {
+  = fields:('&' { return makeText(); }) Spacing {
     return {
       type: 'AND',
-      text: text,
-      spacing: spacing
+      fields: fields
     };
   }
 NOT
-  = text:('!' { return makeText(); }) spacing:Spacing {
+  = fields:('!' { return makeText(); }) Spacing {
     return {
       type: 'NOT',
-      text: text,
-      spacing: spacing
+      fields: fields
     };
   }
 QUESTION
-  = text:('?' { return makeText(); }) spacing:Spacing {
+  = fields:('?' { return makeText(); }) Spacing {
     return {
       type: 'QUESTION',
-      text: text,
-      spacing: spacing
+      fields: fields
     };
   }
 STAR
-  = text:('*' { return makeText(); }) spacing:Spacing {
+  = fields:('*' { return makeText(); }) Spacing {
     return {
       type: 'STAR',
-      text: text,
-      spacing: spacing
+      fields: fields
     };
   }
 PLUS
-  = text:('+' { return makeText(); }) spacing:Spacing {
+  = fields:('+' { return makeText(); }) Spacing {
     return {
       type: 'PLUS',
-      text: text,
-      spacing: spacing
+      fields: fields
     };
   }
 OPEN
-  = text:('(' { return makeText(); }) spacing:Spacing {
+  = fields:('(' { return makeText(); }) Spacing {
     return {
       type: 'OPEN',
-      text: text,
-      spacing: spacing
+      fields: fields
     };
   }
 CLOSE
-  = text:(')' { return makeText(); }) spacing:Spacing {
+  = fields:(')' { return makeText(); }) Spacing {
     return {
       type: 'CLOSE',
-      text: text,
-      spacing: spacing
+      fields: fields
     };
   }
 DOT
-  = text:('.' { return makeText(); }) spacing:Spacing {
+  = fields:('.' { return makeText(); }) Spacing {
     return {
       type: 'DOT',
-      text: text,
-      spacing: spacing
+      fields: fields
     };
   }
 Spacing
-  = spaces:(Space / Comment)* {
+  = fields:(Space / Comment)* {
     return {
       type: 'Spacing',
-      spaces: spaces
+      fields: fields
     };
   }
 Comment
-  = start:('#' { return makeText(); }) content:(!EndOfLine . { return makeText(); })* endofline:EndOfLine {
+  = fields:(('#' { return makeText(); }) (!EndOfLine . { return makeText(); })* EndOfLine) {
     return {
       type: 'Comment',
-      start: start,
-      content: content,
-      endofline: endofline
+      fields: fields
     };
   }
 Space
-  = (' ' / '\t') {
+  = fields:((' ' / '\t') { return makeText(); } / EndOfLine) {
     return {
       type: 'Space',
-      text: makeText()
-    };
-  }
-  / endofline:EndOfLine {
-    return {
-      type: 'Space',
-      endofline: endofline
+      fields: fields
     };
   }
 EndOfLine
   = ('\r\n' / '\n' / '\r') {
     return {
       type: 'EndOfLine',
-      endofline: makeText()
+      fields: makeText()
     };
   }
 EndOfFile

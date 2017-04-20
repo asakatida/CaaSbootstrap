@@ -142,175 +142,97 @@ function peg$parse(input, options) {
       peg$startRuleIndex   = 0,
 
       peg$consts = [
-        function(spacing, definitions, endoffile) {
+        function(fields) {
             return {
               type: 'Grammar',
-              spacing: spacing,
-              definitions: definitions,
-              endoffile: endoffile,
+              fields: fields
             };
           },
-        function(identifier, leftarrow, expression) {
+        function(fields) {
             return {
               type: 'Definition',
-              identifier: identifier,
-              leftarrow: leftarrow,
-              expression: expression
+              fields: fields
             };
           },
-        function(first, slash, sequence) {
-            return {
-              slash: slash,
-              sequence: sequence
-            };
-          },
-        function(first, alternates) {
+        function(fields) {
             return {
               type: 'Expression',
-              sequence: first,
-              alternates: alternates
+              fields: fields
             };
           },
-        function(prefixes) {
+        function(fields) {
             return {
               type: 'Sequence',
-              prefixes: prefixes
+              fields: fields
             };
           },
-        function(prefix, suffix) {
-            if (prefix) {
-              return {
-                type: 'Prefix',
-                prefix: prefix,
-                suffix: suffix
-              };
-            }
+        function(fields) {
             return {
               type: 'Prefix',
-              suffix: suffix
+              fields: fields
             };
           },
-        function(primary, suffix) {
-            if (suffix) {
-              return {
-                type: 'Suffix',
-                primary: primary,
-                suffix: suffix
-              };
-            }
+        function(fields) {
             return {
               type: 'Suffix',
-              primary: primary
+              fields: fields
             };
           },
-        function(identifier) {
+        function(fields) {
             return {
               type: 'Primary',
-              identifier: identifier
+              fields: fields
             };
           },
-        function(open, expression, close) {
-            return {
-              type: 'Primary',
-              open: open,
-              expression: expression,
-              close: close
-            };
-          },
-        function(literal) {
-            return {
-              type: 'Primary',
-              literal: literal
-            };
-          },
-        function(cls) {
-            return {
-              type: 'Primary',
-              class: cls
-            };
-          },
-        function(dot) {
-            return {
-              type: 'Primary',
-              dot: dot
-            };
-          },
-        function(identstart, identconts, spacing) {
+        function(fields) {
             return {
               type: 'Identifier',
-              identstart: identstart,
-              identconts: identconts,
-              spacing: spacing
+              fields: fields
             };
           },
         /^[a-z_]/i,
         peg$classExpectation([["a", "z"], "_"], false, true),
-        function() { return makeText(); },
-        function(text) {
+        function() {
             return {
               type: 'IdentStart',
-              text: text
-            };
-          },
-        function(identstart) {
-            return {
-              type: 'IdentCont',
-              identstart: identstart
+              fields: makeText()
             };
           },
         /^[0-9]/,
         peg$classExpectation([["0", "9"]], false, false),
-        function() {
+        function() { return makeText(); },
+        function(fields) {
             return {
               type: 'IdentCont',
-              text: makeText()
+              fields: fields
             };
           },
         /^[']/,
         peg$classExpectation(["'"], false, false),
-        function(open, char) { return char; },
-        function(open, chars) { return makeText(); },
         /^["]/,
         peg$classExpectation(["\""], false, false),
-        function(open, chars, close, spacing) {
+        function(fields) {
             return {
               type: 'Literal',
-              open: open,
-              chars: chars,
-              close: close,
-              spacing: spacing
+              fields: fields
             };
           },
         "[",
         peg$literalExpectation("[", false),
         "]",
         peg$literalExpectation("]", false),
-        function(open, range) { return range; },
-        function(open, ranges) { return makeText(); },
-        function(open, ranges, close, spacing) {
+        function(fields) {
             return {
               type: 'Class',
-              open: open,
-              ranges: ranges,
-              close: close,
-              spacing: spacing
+              fields: fields
             };
           },
         "-",
         peg$literalExpectation("-", false),
-        function(start) { return makeText(); },
-        function(start, text, end) {
+        function(fields) {
             return {
               type: 'Range',
-              start: start,
-              text: text,
-              end: end
-            };
-          },
-        function(start) {
-            return {
-              type: 'Range',
-              start: start
+              fields: fields
             };
           },
         "\\",
@@ -325,129 +247,111 @@ function peg$parse(input, options) {
         function() {
             return {
               type: 'Char',
-              text: makeText()
+              fields: makeText()
             };
           },
         "<-",
         peg$literalExpectation("<-", false),
-        function(text, spacing) {
+        function(fields) {
             return {
               type: 'LEFTARROW',
-              text: text,
-              spacing: spacing
+              fields: fields
             };
           },
         "/",
         peg$literalExpectation("/", false),
-        function(text, spacing) {
+        function(fields) {
             return {
               type: 'SLASH',
-              text: text,
-              spacing: spacing
+              fields: fields
             };
           },
         "&",
         peg$literalExpectation("&", false),
-        function(text, spacing) {
+        function(fields) {
             return {
               type: 'AND',
-              text: text,
-              spacing: spacing
+              fields: fields
             };
           },
         "!",
         peg$literalExpectation("!", false),
-        function(text, spacing) {
+        function(fields) {
             return {
               type: 'NOT',
-              text: text,
-              spacing: spacing
+              fields: fields
             };
           },
         "?",
         peg$literalExpectation("?", false),
-        function(text, spacing) {
+        function(fields) {
             return {
               type: 'QUESTION',
-              text: text,
-              spacing: spacing
+              fields: fields
             };
           },
         "*",
         peg$literalExpectation("*", false),
-        function(text, spacing) {
+        function(fields) {
             return {
               type: 'STAR',
-              text: text,
-              spacing: spacing
+              fields: fields
             };
           },
         "+",
         peg$literalExpectation("+", false),
-        function(text, spacing) {
+        function(fields) {
             return {
               type: 'PLUS',
-              text: text,
-              spacing: spacing
+              fields: fields
             };
           },
         "(",
         peg$literalExpectation("(", false),
-        function(text, spacing) {
+        function(fields) {
             return {
               type: 'OPEN',
-              text: text,
-              spacing: spacing
+              fields: fields
             };
           },
         ")",
         peg$literalExpectation(")", false),
-        function(text, spacing) {
+        function(fields) {
             return {
               type: 'CLOSE',
-              text: text,
-              spacing: spacing
+              fields: fields
             };
           },
         ".",
         peg$literalExpectation(".", false),
-        function(text, spacing) {
+        function(fields) {
             return {
               type: 'DOT',
-              text: text,
-              spacing: spacing
+              fields: fields
             };
           },
-        function(spaces) {
+        function(fields) {
             return {
               type: 'Spacing',
-              spaces: spaces
+              fields: fields
             };
           },
         "#",
         peg$literalExpectation("#", false),
-        function(start, content, endofline) {
+        function(fields) {
             return {
               type: 'Comment',
-              start: start,
-              content: content,
-              endofline: endofline
+              fields: fields
             };
           },
         " ",
         peg$literalExpectation(" ", false),
         "\t",
         peg$literalExpectation("\t", false),
-        function() {
+        function(fields) {
             return {
               type: 'Space',
-              text: makeText()
-            };
-          },
-        function(endofline) {
-            return {
-              type: 'Space',
-              endofline: endofline
+              fields: fields
             };
           },
         "\r\n",
@@ -459,7 +363,7 @@ function peg$parse(input, options) {
         function() {
             return {
               type: 'EndOfLine',
-              endofline: makeText()
+              fields: makeText()
             };
           },
         function() {
@@ -470,35 +374,35 @@ function peg$parse(input, options) {
       ],
 
       peg$bytecode = [
-        peg$decode("%;8/I#$;!/&#0#*;!&&&#/3$;</*$8#: ##\"! )(#'#(\"'#&'#"),
-        peg$decode("%;'/<#;./3$;\"/*$8#:!##\"! )(#'#(\"'#&'#"),
-        peg$decode("%;#/m#$%;//3#;#/*$8\":\"\"#$! )(\"'#&'#0=*%;//3#;#/*$8\":\"\"#$! )(\"'#&'#&/)$8\":#\"\"! )(\"'#&'#"),
-        peg$decode("%$;$0#*;$&/' 8!:$!! )"),
-        peg$decode("%;0.# &;1.\" &\"/2#;%/)$8\":%\"\"! )(\"'#&'#"),
-        peg$decode("%;&/C#;2.) &;3.# &;4.\" &\"/)$8\":&\"\"! )(\"'#&'#"),
-        peg$decode("%;'/=#%<;.=.##&&!&'#/($8\":'\"!!)(\"'#&'#.| &%;5/<#;\"/3$;6/*$8#:(##\"! )(#'#(\"'#&'#.S &%;*/' 8!:)!! ).A &%;+/' 8!:*!! )./ &%;7/' 8!:+!! )"),
-        peg$decode("%;(/C#$;)0#*;)&/3$;8/*$8#:,##\"! )(#'#(\"'#&'#"),
-        peg$decode("%%4-\"\"5!7./& 8!:/! )/' 8!:0!! )"),
-        peg$decode("%;(/' 8!:1!! ).4 &%42\"\"5!73/& 8!:4! )"),
-        peg$decode("%%45\"\"5!76/& 8!:/! )/\xAE#$%%<45\"\"5!76=.##&&!&'#/2#;-/)$8\":7\"\"$ )(\"'#&'#0N*%%<45\"\"5!76=.##&&!&'#/2#;-/)$8\":7\"\"$ )(\"'#&'#&/H$%45\"\"5!76/( 8!:8!\"#\")/,$;8/#$+$)($'#(#'#(\"'#&'#.\xD1 &%%49\"\"5!7:/& 8!:/! )/\xB6#$%%<49\"\"5!7:=.##&&!&'#/2#;-/)$8\":7\"\"$ )(\"'#&'#0N*%%<49\"\"5!7:=.##&&!&'#/2#;-/)$8\":7\"\"$ )(\"'#&'#&/P$%49\"\"5!7:/( 8!:8!\"#\")/4$;8/+$8$:;$$#\"! )($'#(#'#(\"'#&'#"),
-        peg$decode("%%2<\"\"6<7=/& 8!:/! )/\xB6#$%%<2>\"\"6>7?=.##&&!&'#/2#;,/)$8\":@\"\"$ )(\"'#&'#0N*%%<2>\"\"6>7?=.##&&!&'#/2#;,/)$8\":@\"\"$ )(\"'#&'#&/P$%2>\"\"6>7?/( 8!:A!\"#\")/4$;8/+$8$:B$$#\"! )($'#(#'#(\"'#&'#"),
-        peg$decode("%;-/N#%2C\"\"6C7D/' 8!:E!!\")/3$;-/*$8#:F##\"! )(#'#(\"'#&'#./ &%;-/' 8!:G!! )"),
-        peg$decode("%2H\"\"6H7I/2#4J\"\"5!7K/#$+\")(\"'#&'#.\xCD &%2H\"\"6H7I/P#4L\"\"5!7M/A$4N\"\"5!7O/2$4N\"\"5!7O/#$+$)($'#(#'#(\"'#&'#.\x8A &%2H\"\"6H7I/F#4N\"\"5!7O/7$4N\"\"5!7O.\" &\"/#$+#)(#'#(\"'#&'#.Q &%%<2H\"\"6H7I=.##&&!&'#/5#1\"\"5!7P/'$8\":Q\" )(\"'#&'#"),
-        peg$decode("%%2R\"\"6R7S/& 8!:/! )/2#;8/)$8\":T\"\"! )(\"'#&'#"),
-        peg$decode("%%2U\"\"6U7V/& 8!:/! )/2#;8/)$8\":W\"\"! )(\"'#&'#"),
-        peg$decode("%%2X\"\"6X7Y/& 8!:/! )/2#;8/)$8\":Z\"\"! )(\"'#&'#"),
-        peg$decode("%%2[\"\"6[7\\/& 8!:/! )/2#;8/)$8\":]\"\"! )(\"'#&'#"),
-        peg$decode("%%2^\"\"6^7_/& 8!:/! )/2#;8/)$8\":`\"\"! )(\"'#&'#"),
-        peg$decode("%%2a\"\"6a7b/& 8!:/! )/2#;8/)$8\":c\"\"! )(\"'#&'#"),
-        peg$decode("%%2d\"\"6d7e/& 8!:/! )/2#;8/)$8\":f\"\"! )(\"'#&'#"),
-        peg$decode("%%2g\"\"6g7h/& 8!:/! )/2#;8/)$8\":i\"\"! )(\"'#&'#"),
-        peg$decode("%%2j\"\"6j7k/& 8!:/! )/2#;8/)$8\":l\"\"! )(\"'#&'#"),
-        peg$decode("%%2m\"\"6m7n/& 8!:/! )/2#;8/)$8\":o\"\"! )(\"'#&'#"),
-        peg$decode("%$;:.# &;90)*;:.# &;9&/' 8!:p!! )"),
-        peg$decode("%%2q\"\"6q7r/& 8!:/! )/\x95#$%%<;;=.##&&!&'#/6#1\"\"5!7P/($8\":E\"!$)(\"'#&'#0L*%%<;;=.##&&!&'#/6#1\"\"5!7P/($8\":E\"!$)(\"'#&'#&/3$;;/*$8#:s##\"! )(#'#(\"'#&'#"),
-        peg$decode("%2t\"\"6t7u.) &2v\"\"6v7w/& 8!:x! )./ &%;;/' 8!:y!! )"),
-        peg$decode("%2z\"\"6z7{.5 &2|\"\"6|7}.) &2~\"\"6~7\x7F/& 8!:\x80! )"),
-        peg$decode("%%<1\"\"5!7P=.##&&!&'#/& 8!:\x81! )")
+        peg$decode("%%;8/B#$;!/&#0#*;!&&&#/,$;</#$+#)(#'#(\"'#&'#/' 8!: !! )"),
+        peg$decode("%%;'/5#;./,$;\"/#$+#)(#'#(\"'#&'#/' 8!:!!! )"),
+        peg$decode("%%;#/Y#$%;//,#;#/#$+\")(\"'#&'#06*%;//,#;#/#$+\")(\"'#&'#&/#$+\")(\"'#&'#/' 8!:\"!! )"),
+        peg$decode("%$;$0#*;$&/' 8!:#!! )"),
+        peg$decode("%%;0.# &;1.\" &\"/,#;%/#$+\")(\"'#&'#/' 8!:$!! )"),
+        peg$decode("%%;&/=#;2.) &;3.# &;4.\" &\"/#$+\")(\"'#&'#/' 8!:%!! )"),
+        peg$decode("%%;'/8#%<;.=.##&&!&'#/#$+\")(\"'#&'#.Q &%;5/5#;\"/,$;6/#$+#)(#'#(\"'#&'#./ &;*.) &;+.# &;7/' 8!:&!! )"),
+        peg$decode("%%;(/<#$;)0#*;)&/,$;8/#$+#)(#'#(\"'#&'#/' 8!:'!! )"),
+        peg$decode("%4(\"\"5!7)/& 8!:*! )"),
+        peg$decode("%;(.4 &%4+\"\"5!7,/& 8!:-! )/' 8!:.!! )"),
+        peg$decode("%%%4/\"\"5!70/& 8!:-! )/\xA0#$%%<4/\"\"5!70=.##&&!&'#/,#;-/#$+\")(\"'#&'#0H*%%<4/\"\"5!70=.##&&!&'#/,#;-/#$+\")(\"'#&'#&/F$%4/\"\"5!70/& 8!:-! )/,$;8/#$+$)($'#(#'#(\"'#&'#.\xBB &%%41\"\"5!72/& 8!:-! )/\xA0#$%%<41\"\"5!72=.##&&!&'#/,#;-/#$+\")(\"'#&'#0H*%%<41\"\"5!72=.##&&!&'#/,#;-/#$+\")(\"'#&'#&/F$%41\"\"5!72/& 8!:-! )/,$;8/#$+$)($'#(#'#(\"'#&'#/' 8!:3!! )"),
+        peg$decode("%%%24\"\"6475/& 8!:-! )/\xA0#$%%<26\"\"6677=.##&&!&'#/,#;,/#$+\")(\"'#&'#0H*%%<26\"\"6677=.##&&!&'#/,#;,/#$+\")(\"'#&'#&/F$%26\"\"6677/& 8!:-! )/,$;8/#$+$)($'#(#'#(\"'#&'#/' 8!:8!! )"),
+        peg$decode("%%;-/F#%29\"\"697:/& 8!:-! )/,$;-/#$+#)(#'#(\"'#&'#.# &;-/' 8!:;!! )"),
+        peg$decode("%%2<\"\"6<7=/2#4>\"\"5!7?/#$+\")(\"'#&'#.\xC9 &%2<\"\"6<7=/P#4@\"\"5!7A/A$4B\"\"5!7C/2$4B\"\"5!7C/#$+$)($'#(#'#(\"'#&'#.\x86 &%2<\"\"6<7=/F#4B\"\"5!7C/7$4B\"\"5!7C.\" &\"/#$+#)(#'#(\"'#&'#.M &%%<2<\"\"6<7==.##&&!&'#/1#1\"\"5!7D/#$+\")(\"'#&'#/& 8!:E! )"),
+        peg$decode("%%%2F\"\"6F7G/& 8!:-! )/,#;8/#$+\")(\"'#&'#/' 8!:H!! )"),
+        peg$decode("%%%2I\"\"6I7J/& 8!:-! )/,#;8/#$+\")(\"'#&'#/' 8!:K!! )"),
+        peg$decode("%%2L\"\"6L7M/& 8!:-! )/1#;8/($8\":N\"!!)(\"'#&'#"),
+        peg$decode("%%2O\"\"6O7P/& 8!:-! )/1#;8/($8\":Q\"!!)(\"'#&'#"),
+        peg$decode("%%2R\"\"6R7S/& 8!:-! )/1#;8/($8\":T\"!!)(\"'#&'#"),
+        peg$decode("%%2U\"\"6U7V/& 8!:-! )/1#;8/($8\":W\"!!)(\"'#&'#"),
+        peg$decode("%%2X\"\"6X7Y/& 8!:-! )/1#;8/($8\":Z\"!!)(\"'#&'#"),
+        peg$decode("%%2[\"\"6[7\\/& 8!:-! )/1#;8/($8\":]\"!!)(\"'#&'#"),
+        peg$decode("%%2^\"\"6^7_/& 8!:-! )/1#;8/($8\":`\"!!)(\"'#&'#"),
+        peg$decode("%%2a\"\"6a7b/& 8!:-! )/1#;8/($8\":c\"!!)(\"'#&'#"),
+        peg$decode("%$;:.# &;90)*;:.# &;9&/' 8!:d!! )"),
+        peg$decode("%%%2e\"\"6e7f/& 8!:-! )/\x8C#$%%<;;=.##&&!&'#/5#1\"\"5!7D/'$8\":-\" )(\"'#&'#0K*%%<;;=.##&&!&'#/5#1\"\"5!7D/'$8\":-\" )(\"'#&'#&/,$;;/#$+#)(#'#(\"'#&'#/' 8!:g!! )"),
+        peg$decode("%%2h\"\"6h7i.) &2j\"\"6j7k/& 8!:-! ).# &;;/' 8!:l!! )"),
+        peg$decode("%2m\"\"6m7n.5 &2o\"\"6o7p.) &2q\"\"6q7r/& 8!:s! )"),
+        peg$decode("%%<1\"\"5!7D=.##&&!&'#/& 8!:t! )")
       ],
 
       peg$currPos          = 0,

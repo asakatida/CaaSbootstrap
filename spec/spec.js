@@ -60,7 +60,12 @@ describe("Meta grammar endpoint", function() {
           .expect('Content-Type', /json/)
           .expect(200)
           .then(function (schema) {
-        expect(ajv.validate(schema.body, res.body)).toBeTruthy();
+        var validate = ajv.compile(schema.body)
+        var valid = validate(res.body)
+        if (!valid) {
+          console.log(validate.errors)
+        }
+        expect(valid).toBeTruthy();
         done();
       }).catch(function(err) {
         fail(err);
@@ -84,7 +89,12 @@ describe("Meta grammar endpoint", function() {
           .expect('Content-Type', /json/)
           .expect(200)
           .then(function (schema) {
-        expect(ajv.validate(schema.body, res.body)).toBeTruthy();
+        var validate = ajv.compile(schema.body)
+        var valid = validate(res.body)
+        if (!valid) {
+          console.log(validate.errors)
+        }
+        expect(valid).toBeTruthy();
         done();
       }).catch(function(err) {
         fail(err);

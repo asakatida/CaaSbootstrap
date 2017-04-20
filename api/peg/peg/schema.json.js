@@ -8,9 +8,7 @@ module.exports = function (req) {
     "type": "object",
     "required": [
       "type",
-      "spacing",
-      "definitions",
-      "endoffile"
+      "fields"
     ],
     "properties": {
       "type": {
@@ -18,13 +16,18 @@ module.exports = function (req) {
           "Grammar"
         ]
       },
-      "spacing": { "$ref": "#/definitions/Spacing" },
-      "definitions": {
+      "fields": {
         "type": "array",
-        "items": { "$ref": "#/definitions/Definition" },
-        "minItems": 1
-      },
-      "endoffile": { "$ref": "#/definitions/EndOfFile" }
+        "items": [
+          { "$ref": "#/definitions/Spacing" },
+          {
+            "type": "array",
+            "items": { "$ref": "#/definitions/Definition" },
+            "minItems": 1
+          },
+          { "$ref": "#/definitions/EndOfFile" }
+        ]
+      }
     },
     "definitions": {
       "Text": {
@@ -53,9 +56,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "identifier",
-          "leftarrow",
-          "expression"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -63,17 +64,21 @@ module.exports = function (req) {
               "Definition"
             ]
           },
-          "identifier": { "$ref": "#/definitions/Identifier" },
-          "leftarrow": { "$ref": "#/definitions/LEFTARROW" },
-          "expression": { "$ref": "#/definitions/Expression" }
+          "fields": {
+            "type": "array",
+            "items": [
+              { "$ref": "#/definitions/Identifier" },
+              { "$ref": "#/definitions/LEFTARROW" },
+              { "$ref": "#/definitions/Expression" }
+            ]
+          }
         }
       },
       "Expression": {
         "type": "object",
         "required": [
           "type",
-          "sequence",
-          "alternates"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -81,20 +86,21 @@ module.exports = function (req) {
               "Expression"
             ]
           },
-          "sequence": { "$ref": "#/definitions/Sequence" },
-          "alternates": {
+          "fields": {
             "type": "array",
-            "items": {
-              "type": "object",
-              "required": [
-                "slash",
-                "sequence"
-              ],
-              "properties": {
-                "slash": { "$ref": "#/definitions/SLASH" },
-                "sequence": { "$ref": "#/definitions/Sequence" }
+            "items": [
+              { "$ref": "#/definitions/Sequence" },
+              {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": [
+                    { "$ref": "#/definitions/SLASH" },
+                    { "$ref": "#/definitions/Sequence" }
+                  ]
+                }
               }
-            }
+            ]
           }
         }
       },
@@ -102,7 +108,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "prefixes"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -110,7 +116,7 @@ module.exports = function (req) {
               "Sequence"
             ]
           },
-          "prefixes": {
+          "fields": {
             "type": "array",
             "items": { "$ref": "#/definitions/Prefix" }
           }
@@ -120,7 +126,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "suffix"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -128,16 +134,26 @@ module.exports = function (req) {
               "Prefix"
             ]
           },
-          "and": { "$ref": "#/definitions/AND" },
-          "not": { "$ref": "#/definitions/NOT" },
-          "suffix": { "$ref": "#/definitions/Suffix" }
+          "fields": {
+            "type": "array",
+            "items": [
+              {
+                "oneOf": [
+                  { "$ref": "#/definitions/AND" },
+                  { "$ref": "#/definitions/NOT" },
+                  { "enum": [ null ] }
+                ]
+              },
+              { "$ref": "#/definitions/Suffix" }
+            ]
+          }
         }
       },
       "Suffix": {
         "type": "object",
         "required": [
           "type",
-          "primary"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -145,16 +161,27 @@ module.exports = function (req) {
               "Suffix"
             ]
           },
-          "primary": { "$ref": "#/definitions/Primary" },
-          "question": { "$ref": "#/definitions/QUESTION" },
-          "star": { "$ref": "#/definitions/STAR" },
-          "plus": { "$ref": "#/definitions/PLUS" }
+          "fields": {
+            "type": "array",
+            "items": [
+              { "$ref": "#/definitions/Primary" },
+              {
+                "oneOf": [
+                  { "$ref": "#/definitions/QUESTION" },
+                  { "$ref": "#/definitions/STAR" },
+                  { "$ref": "#/definitions/PLUS" },
+                  { "enum": [ null ] }
+                ]
+              }
+            ]
+          }
         }
       },
       "Primary": {
         "type": "object",
         "required": [
-          "type"
+          "type",
+          "fields"
         ],
         "properties": {
           "type": {
@@ -175,9 +202,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "identstart",
-          "identconts",
-          "spacing"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -197,7 +222,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "text"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -277,7 +302,8 @@ module.exports = function (req) {
       "IdentCont": {
         "type": "object",
         "required": [
-          "type"
+          "type",
+          "fields"
         ],
         "properties": {
           "type": {
@@ -316,10 +342,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "open",
-          "chars",
-          "close",
-          "spacing"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -368,10 +391,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "open",
-          "ranges",
-          "close",
-          "spacing"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -420,7 +440,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "start"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -451,7 +471,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "text"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -479,8 +499,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "leftarrow",
-          "spacing"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -510,8 +529,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "slash",
-          "spacing"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -541,8 +559,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "and",
-          "spacing"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -572,8 +589,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "not",
-          "spacing"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -603,8 +619,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "question",
-          "spacing"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -634,8 +649,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "star",
-          "spacing"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -665,8 +679,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "plus",
-          "spacing"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -696,8 +709,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "open",
-          "spacing"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -727,8 +739,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "close",
-          "spacing"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -758,8 +769,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "dot",
-          "spacing"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -789,7 +799,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "spacing"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -812,9 +822,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "start",
-          "content",
-          "endofline"
+          "fields"
         ],
         "properties": {
           "type": {
@@ -847,7 +855,8 @@ module.exports = function (req) {
       "Space": {
         "type": "object",
         "required": [
-          "type"
+          "type",
+          "fields"
         ],
         "properties": {
           "type": {
@@ -878,7 +887,7 @@ module.exports = function (req) {
         "type": "object",
         "required": [
           "type",
-          "text"
+          "fields"
         ],
         "properties": {
           "type": {
