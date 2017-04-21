@@ -1,8 +1,6 @@
 const app = require('./app');
-const http = require('http');
+const https = require('https');
 
-const PORT = process.env.PORT || 8080;
+https.createServer(app).listen(443);
 
-http.createServer(app).listen(PORT);
-
-console.log('Running on http://localhost:' + PORT);
+console.log('Running on https://localhost:443');
