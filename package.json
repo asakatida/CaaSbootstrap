@@ -36,6 +36,7 @@
   "dependencies": {
     "baconjs": "^0.7.92",
     "express": "^4.15.2",
+    "jsonpath": "^0.2.11",
     "pug": "^2.0.0-beta11",
     "superagent": "^3.5.2"
   },
