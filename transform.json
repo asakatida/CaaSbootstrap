@@ -1,0 +1,219 @@
+[
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Grammar"
+          ]
+        }
+      }
+    },
+    "result": {
+      "map": { "path": "$.fields[1]" }
+    }
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Definition"
+          ]
+        }
+      }
+    },
+    "result": {
+      "object": {
+        "identifier": { "recurse": { "path": "$.fields[0]" } },
+        "expression": { "recurse": { "path": "$.fields[2]" } }
+      }
+    }
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Expression"
+          ]
+        }
+      }
+    },
+    "result": {
+      "object": {
+        "sequences": { "map": { "path": "$.fields[0,1][*][1]" } }
+      }
+    }
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Sequence"
+          ]
+        }
+      }
+    },
+    "result": {
+      "object": {
+        "prefixes": {
+          "map": {
+            "join": [
+              { "path": "$.fields[:1]" },
+              { "path": "$.fields[1][*][1]" }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Prefix"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": [
+            {
+              "type": "object",
+              "required": [
+                "type",
+                "fields"
+              ],
+              "properties": {
+                "type": {
+                  "enum": [
+                    "AND"
+                  ]
+                }
+              }
+            },
+            { "type": "object" }
+          ]
+        }
+      }
+    },
+    "result": {}
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Prefix"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": [
+            {
+              "type": "object",
+              "required": [
+                "type",
+                "fields"
+              ],
+              "properties": {
+                "type": {
+                  "enum": [
+                    "NOT"
+                  ]
+                }
+              }
+            },
+            { "type": "object" }
+          ]
+        }
+      }
+    },
+    "result": {}
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Prefix"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": [
+            { "enum": [ null ] },
+            { "type": "object" }
+          ]
+        }
+      }
+    },
+    "result": {}
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Suffix"
+          ]
+        }
+      }
+    },
+    "result": {}
+  },
+  {
+    "schema": {},
+    "result": {}
+  }
+]
