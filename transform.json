@@ -81,15 +81,11 @@
       }
     },
     "result": {
-      "object": {
-        "prefixes": {
-          "map": {
-            "join": [
-              { "path": "$.fields[:1]" },
-              { "path": "$.fields[1][*][1]" }
-            ]
-          }
-        }
+      "map": {
+        "join": [
+          { "path": "$.fields[:1]" },
+          { "path": "$.fields[1][*][1]" }
+        ]
       }
     }
   },
@@ -129,7 +125,9 @@
         }
       }
     },
-    "result": {}
+    "result": {
+      "and": { "recurse": { "path": "$.fields[1]" } }
+    }
   },
   {
     "schema": {
@@ -167,7 +165,9 @@
         }
       }
     },
-    "result": {}
+    "result": {
+      "not": { "recurse": { "path": "$.fields[1]" } }
+    }
   },
   {
     "schema": {
@@ -192,7 +192,9 @@
         }
       }
     },
-    "result": {}
+    "result": {
+      "recurse": { "path": "$.fields[1]" }
+    }
   },
   {
     "schema": {
@@ -207,13 +209,289 @@
           "enum": [
             "Suffix"
           ]
+        },
+        "fields": {
+          "type": "array",
+          "items": [
+            { "type": "object" },
+            {
+              "type": "object",
+              "required": [
+                "type",
+                "fields"
+              ],
+              "properties": {
+                "type": {
+                  "enum": [
+                    "QUESTION"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "result": {
+      "question": { "recurse": { "path": "$.fields[0]" } }
+    }
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Suffix"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": [
+            { "type": "object" },
+            {
+              "type": "object",
+              "required": [
+                "type",
+                "fields"
+              ],
+              "properties": {
+                "type": {
+                  "enum": [
+                    "STAR"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "result": {
+      "star": { "recurse": { "path": "$.fields[0]" } }
+    }
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Suffix"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": [
+            { "type": "object" },
+            {
+              "type": "object",
+              "required": [
+                "type",
+                "fields"
+              ],
+              "properties": {
+                "type": {
+                  "enum": [
+                    "PLUS"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "result": {
+      "plus": { "recurse": { "path": "$.fields[0]" } }
+    }
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Suffix"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": [
+            { "type": "object" },
+            { "enum": [ null ] }
+          ]
+        }
+      }
+    },
+    "result": {
+      "recurse": { "path": "$.fields[0]" }
+    }
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Primary"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": [
+          ]
         }
       }
     },
     "result": {}
   },
   {
-    "schema": {},
-    "result": {}
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Identifier"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": [
+          ]
+        }
+      }
+    },
+    "result": {
+      "join": {
+        "join": [
+          { "path": "$.fields[:1]..text" },
+          { "path": "$.fields[1]..text" }
+        ]
+      }
+    }
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Literal"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": [
+          ]
+        }
+      }
+    },
+    "result": {
+      "join": { "path": "$.fields[1]..text" }
+    }
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Class"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": [
+          ]
+        }
+      }
+    },
+    "result": {
+      "map": { "path": "$.fields[1]" }
+    }
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Range"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": [
+          ]
+        }
+      }
+    },
+    "result": {
+    }
+  },
+  {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [
+        "type",
+        "fields"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "Range"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": [
+          ]
+        }
+      }
+    },
+    "result": {
+    }
   }
 ]
