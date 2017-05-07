@@ -1,11 +1,25 @@
 const app = require('./app');
 const http = require('http');
 const https = require('https');
+const os = require('os');
 
-http.createServer(app).listen(80);
+var networkInterfaces = os.networkInterfaces();
 
-console.log('Running on http://localhost:80');
+Object.keys(networkInterfaces).forEach(function (ifname) {
+  networkInterfaces[ifname].forEach(function (iface) {
+    if (iface.family !== 'IPv4' || iface.internal !== false) {
+      return;
+    }
 
-https.createServer(app).listen(443);
+    var server = http.createServer(app);
+    var sserver = https.createServer(app);
 
-console.log('Running on https://localhost:443');
+    server.listen(80, iface.address, function() {
+      console.log('Running http on ', server.address());
+    });
+
+    sserver.listen(443, iface.address, function() {
+      console.log('Running https on ', sserver.address());
+    });
+  });
+});
