@@ -1,10 +1,10 @@
 const Bacon = require('baconjs').Bacon;
 
-module.exports = function (req) {
-  return Bacon.once({
-    "$schema": "http://json-schema.org/draft-04/schema#",
+module.exports = function (req, res) {
+  res.json({
+    "$schema": "http://json-schema.org/draft-06/schema#",
     "description": "A generic syntax tree",
-    "id": "https://" + req.hostname + req.originalUrl,
+    "$id": "https://" + req.hostname + req.originalUrl,
     "additionalProperties": false,
     "definitions": {
       "element": {
@@ -12,7 +12,7 @@ module.exports = function (req) {
           { "$ref": "#" },
           { "$ref": "#/definitions/nodeArray" },
           { "$ref": "#/definitions/text" },
-          { "enum": [ null ] }
+          { "const": null }
         ]
       },
       "nodeArray": {
@@ -51,5 +51,5 @@ module.exports = function (req) {
     },
     "required": [ "type" ],
     "type": "object"
-  }).toPromise();
+  });
 };

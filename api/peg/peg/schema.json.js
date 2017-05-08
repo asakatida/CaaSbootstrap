@@ -1,10 +1,10 @@
 const Bacon = require('baconjs').Bacon;
 
-module.exports = function (req) {
-  return Bacon.once({
-    "$schema": "http://json-schema.org/draft-04/schema#",
+module.exports = function (req, res) {
+  res.json({
+    "$schema": "http://json-schema.org/draft-06/schema#",
     "description": "A PEG syntax tree",
-    "id": "https://" + req.hostname + req.originalUrl,
+    "$id": "https://" + req.hostname + req.originalUrl,
     "type": "object",
     "required": [
       "type",
@@ -12,9 +12,7 @@ module.exports = function (req) {
     ],
     "properties": {
       "type": {
-        "enum": [
-          "Grammar"
-        ]
+        "const": "Grammar"
       },
       "fields": {
         "type": "array",
@@ -39,9 +37,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Text"
-            ]
+            "const": "Text"
           },
           "text": {
             "type": "string"
@@ -60,9 +56,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Definition"
-            ]
+            "const": "Definition"
           },
           "fields": {
             "type": "array",
@@ -82,9 +76,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Expression"
-            ]
+            "const": "Expression"
           },
           "fields": {
             "type": "array",
@@ -112,9 +104,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Sequence"
-            ]
+            "const": "Sequence"
           },
           "fields": {
             "type": "array",
@@ -130,9 +120,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Prefix"
-            ]
+            "const": "Prefix"
           },
           "fields": {
             "type": "array",
@@ -141,7 +129,7 @@ module.exports = function (req) {
                 "oneOf": [
                   { "$ref": "#/definitions/AND" },
                   { "$ref": "#/definitions/NOT" },
-                  { "enum": [ null ] }
+                  { "const": null }
                 ]
               },
               { "$ref": "#/definitions/Suffix" }
@@ -157,9 +145,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Suffix"
-            ]
+            "const": "Suffix"
           },
           "fields": {
             "type": "array",
@@ -170,7 +156,7 @@ module.exports = function (req) {
                   { "$ref": "#/definitions/QUESTION" },
                   { "$ref": "#/definitions/STAR" },
                   { "$ref": "#/definitions/PLUS" },
-                  { "enum": [ null ] }
+                  { "const": null }
                 ]
               }
             ]
@@ -185,9 +171,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Primary"
-            ]
+            "const": "Primary"
           },
           "identifier": { "$ref": "#/definitions/Identifier" },
           "open": { "$ref": "#/definitions/OPEN" },
@@ -206,9 +190,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Identifier"
-            ]
+            "const": "Identifier"
           },
           "identstart": { "$ref": "#/definitions/IdentStart" },
           "identconts": {
@@ -226,9 +208,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "IdentStart"
-            ]
+            "const": "IdentStart"
           },
           "text": {
             "allOf": [
@@ -307,9 +287,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "IdentCont"
-            ]
+            "const": "IdentCont"
           },
           "text": {
             "allOf": [
@@ -346,9 +324,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Literal"
-            ]
+            "const": "Literal"
           },
           "open": {
             "allOf": [
@@ -357,9 +333,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "\""
-                    ]
+                    "const": "\""
                   }
                 }
               }
@@ -376,9 +350,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "\""
-                    ]
+                    "const": "\""
                   }
                 }
               }
@@ -395,9 +367,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Class"
-            ]
+            "const": "Class"
           },
           "open": {
             "allOf": [
@@ -406,9 +376,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "["
-                    ]
+                    "const": "["
                   }
                 }
               }
@@ -425,9 +393,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "]"
-                    ]
+                    "const": "]"
                   }
                 }
               }
@@ -444,9 +410,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Range"
-            ]
+            "const": "Range"
           },
           "start": { "$ref": "#/definitions/Char" },
           "text": {
@@ -456,9 +420,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "-"
-                    ]
+                    "const": "-"
                   }
                 }
               }
@@ -475,9 +437,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Char"
-            ]
+            "const": "Char"
           },
           "text": {
             "allOf": [
@@ -503,9 +463,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "LEFTARROW"
-            ]
+            "const": "LEFTARROW"
           },
           "text": {
             "allOf": [
@@ -514,9 +472,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "<-"
-                    ]
+                    "const": "<-"
                   }
                 }
               }
@@ -533,9 +489,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "SLASH"
-            ]
+            "const": "SLASH"
           },
           "text": {
             "allOf": [
@@ -544,9 +498,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "/"
-                    ]
+                    "const": "/"
                   }
                 }
               }
@@ -563,9 +515,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "AND"
-            ]
+            "const": "AND"
           },
           "text": {
             "allOf": [
@@ -574,9 +524,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "&"
-                    ]
+                    "const": "&"
                   }
                 }
               }
@@ -593,9 +541,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "NOT"
-            ]
+            "const": "NOT"
           },
           "not": {
             "allOf": [
@@ -604,9 +550,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "!"
-                    ]
+                    "const": "!"
                   }
                 }
               }
@@ -623,9 +567,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "QUESTION"
-            ]
+            "const": "QUESTION"
           },
           "text": {
             "allOf": [
@@ -634,9 +576,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "?"
-                    ]
+                    "const": "?"
                   }
                 }
               }
@@ -653,9 +593,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "STAR"
-            ]
+            "const": "STAR"
           },
           "text": {
             "allOf": [
@@ -664,9 +602,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "*"
-                    ]
+                    "const": "*"
                   }
                 }
               }
@@ -683,9 +619,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "PLUS"
-            ]
+            "const": "PLUS"
           },
           "text": {
             "allOf": [
@@ -694,9 +628,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "+"
-                    ]
+                    "const": "+"
                   }
                 }
               }
@@ -713,9 +645,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "OPEN"
-            ]
+            "const": "OPEN"
           },
           "text": {
             "allOf": [
@@ -724,9 +654,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "("
-                    ]
+                    "const": "("
                   }
                 }
               }
@@ -743,9 +671,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "CLOSE"
-            ]
+            "const": "CLOSE"
           },
           "text": {
             "allOf": [
@@ -754,9 +680,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      ")"
-                    ]
+                    "const": ")"
                   }
                 }
               }
@@ -773,9 +697,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "DOT"
-            ]
+            "const": "DOT"
           },
           "dot": {
             "allOf": [
@@ -784,9 +706,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "."
-                    ]
+                    "const": "."
                   }
                 }
               }
@@ -803,9 +723,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Spacing"
-            ]
+            "const": "Spacing"
           },
           "spacing": {
             "type": "array",
@@ -826,9 +744,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Comment"
-            ]
+            "const": "Comment"
           },
           "start": {
             "allOf": [
@@ -837,9 +753,7 @@ module.exports = function (req) {
                 "type": "object",
                 "properties": {
                   "text": {
-                    "enum": [
-                      "#"
-                    ]
+                    "const": "#"
                   }
                 }
               }
@@ -860,9 +774,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "Space"
-            ]
+            "const": "Space"
           },
           "text": {
             "allOf": [
@@ -891,9 +803,7 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "EndOfLine"
-            ]
+            "const": "EndOfLine"
           },
           "text": {
             "allOf": [
@@ -921,12 +831,10 @@ module.exports = function (req) {
         ],
         "properties": {
           "type": {
-            "enum": [
-              "EndOfFile"
-            ]
+            "const": "EndOfFile"
           }
         }
       }
     }
-  }).toPromise();
+  });
 };

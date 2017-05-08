@@ -1,7 +1,7 @@
 const Bacon = require('baconjs').Bacon;
 
-module.exports = function (req) {
-  return Bacon.once(
+module.exports = function (req, res) {
+  res.send(
     "# Hierarchical syntax\n" +
     "Grammar <- Spacing Definition+ EndOfFile\n" +
     "Definition <- Identifier LEFTARROW Expression\n" +
@@ -32,5 +32,5 @@ module.exports = function (req) {
     "Comment <- '#' (!EndOfLine .)* EndOfLine\n" +
     "Space <- ' ' / '\\t' / EndOfLine\n" +
     "EndOfLine <- '\\r\\n' / '\\n' / '\\r'\n" +
-    "EndOfFile <- !.\n").toPromise()
+    "EndOfFile <- !.\n");
 };

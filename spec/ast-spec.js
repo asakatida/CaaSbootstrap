@@ -8,14 +8,14 @@ const request = require('supertest');
 
 const ajv = new Ajv();
 
-describe("Meta grammar endpoint", function() {
+describe("AST endpoint", function() {
   var server = app.listen();
 
   const PORT = server.address().port;
 
   it("loads the endpoint", function(done) {
     request('http://localhost:' + PORT)
-      .get('/api/peg/peg')
+      .get('/api/peg/ast')
       .query({ src: 'http://localhost:' + PORT + '/resources/peg.peg' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -28,7 +28,7 @@ describe("Meta grammar endpoint", function() {
 
   it("is equal to static result", function(done) {
     request('http://localhost:' + PORT)
-      .get('/api/peg/peg')
+      .get('/api/peg/ast')
       .query({ src: 'http://localhost:' + PORT + '/resources/peg.peg' })
       .expect('Content-Type', /json/)
       .expect(200)
@@ -39,7 +39,7 @@ describe("Meta grammar endpoint", function() {
             done();
             return;
           }
-          expect(JSON.parse(data)).toEqual(res.body);
+          expect({}).toEqual(res.body);
           done();
         })
       }).catch(function(err) {
@@ -48,44 +48,15 @@ describe("Meta grammar endpoint", function() {
       });
   });
 
-  it("passes the grammar schema", function(done) {
+  it("passes the AST schema", function(done) {
     request('http://localhost:' + PORT)
-      .get('/api/peg/peg')
+      .get('/api/peg/ast')
       .query({ src: 'http://localhost:' + PORT + '/resources/peg.peg' })
       .expect('Content-Type', /json/)
       .expect(200)
       .then(function (res) {
         request('http://localhost:' + PORT)
-          .get('/api/peg/peg/schema/schema.json')
-          .expect('Content-Type', /json/)
-          .expect(200)
-          .then(function (schema) {
-        var validate = ajv.compile(schema.body)
-        var valid = validate(res.body)
-        if (!valid) {
-          console.log(validate.errors)
-        }
-        expect(valid).toBeTruthy();
-        done();
-      }).catch(function(err) {
-        fail(err);
-        done();
-      });
-    }).catch(function(err) {
-      fail(err);
-      done();
-    });
-  });
-
-  it("passes the PEG grammar schema", function(done) {
-    request('http://localhost:' + PORT)
-      .get('/api/peg/peg')
-      .query({ src: 'http://localhost:' + PORT + '/resources/peg.peg' })
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .then(function (res) {
-        request('http://localhost:' + PORT)
-          .get('/api/peg/peg/schema.json')
+          .get('/api/peg/ast/schema.json')
           .expect('Content-Type', /json/)
           .expect(200)
           .then(function (schema) {
