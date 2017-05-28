@@ -39,7 +39,7 @@ describe("AST endpoint", function() {
             done();
             return;
           }
-          expect({}).toEqual(res.body);
+          expect(res.body).toEqual({});
           done();
         })
       }).catch(function(err) {

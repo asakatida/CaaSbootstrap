@@ -56,7 +56,7 @@ function compile(code) {
   });
   function recurse(input) {
     var code = processor.find(function (validate) {
-      validate.validate(input);
+      return validate.validate(input);
     });
     if (code) {
       return code(input, recurse);
