@@ -6,14 +6,3 @@ node_js:
 - '5'
 - '4'
 sudo: false
-# deploy:
-#   provider: gae
-#   keyfile: client-secret.json
-#   project: caasbootstrap
-#   no_stop_previous_version: true
-#   skip_cleanup: true
-#   on:
-#     node: node
-# before_install:
-# - openssl aes-256-cbc -K $encrypted_2a05e7dba064_key -iv $encrypted_2a05e7dba064_iv
-#   -in client-secret.json.enc -out client-secret.json -d

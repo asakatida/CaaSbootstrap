@@ -17,7 +17,7 @@ const transform = compile([
       }
     },
     "result": {
-      "map": { "path": "$.fields[1]" }
+      "map": { "join": { "path": "$.fields[1]" } }
     }
   },
   {

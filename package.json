@@ -33,17 +33,15 @@
     "test": "jasmine"
   },
   "dependencies": {
-    "ajv": "^5.0.1",
+    "ajv": "^5.1.4",
     "baconjs": "^0.7.92",
-    "express": "^4.15.2",
+    "express": "^4.15.3",
     "jsonpath": "^0.2.11",
     "pug": "^2.0.0-beta11",
     "run-middleware": "^0.6.6",
     "superagent": "^3.5.2"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
-    "eslint-config-google": "^0.7.1",
     "jasmine": "^2.5.3",
     "pegjs": "^0.10.0",
     "supertest": "^3.0.0"

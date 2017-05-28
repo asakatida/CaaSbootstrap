@@ -61,7 +61,6 @@ function compile(code) {
     if (code) {
       return code(input, recurse);
     }
-    return input;
     throw "invalid input";
   }
   return recurse;
