@@ -46,20 +46,28 @@ function lower(result) {
       return recurse(code(input));
     };
   } else {
-    throw JSON.stringify(result);
+    throw {error: result};
   }
 };
 
 function compile(code) {
   var processor = code.map(function (value) {
-    return {validate: ajv.compile(value.schema), lower: lower(value.result)};
+    return {
+      validate: ajv.compile(value.schema).validate,
+      lower: lower(value.result)
+    };
   });
   function recurse(input) {
     var code = processor.find(function (validate) {
-      return validate.validate(input);
+      try {
+        return validate.validate(input);
+      } catch (e) {
+        console.log(JSON.stringify(e));
+      }
+      return false;
     });
     if (code) {
-      return code(input, recurse);
+      return code.lower(input, recurse);
     }
     throw "invalid input";
   }
