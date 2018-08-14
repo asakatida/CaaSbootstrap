@@ -33,16 +33,16 @@
     "test": "jasmine"
   },
   "dependencies": {
-    "ajv": "^5.1.4",
-    "baconjs": "^0.7.92",
+    "ajv": "^6.5.2",
+    "baconjs": "^2.0.9",
     "express": "^4.15.3",
-    "jsonpath": "^0.2.11",
+    "jsonpath": "^1.0.0",
     "pug": "^2.0.0-beta11",
-    "run-middleware": "^0.6.6",
+    "run-middleware": "^0.9.10",
     "superagent": "^3.5.2"
   },
   "devDependencies": {
-    "jasmine": "^2.5.3",
+    "jasmine": "^3.2.0",
     "pegjs": "^0.10.0",
     "supertest": "^3.0.0"
   }
