@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "ajv": "^6.5.2",
-    "baconjs": "^2.0.9",
+    "baconjs": "^3.0.0",
     "express": "^4.15.3",
     "jsonpath": "^1.0.0",
     "pug": "^2.0.0-beta11",
