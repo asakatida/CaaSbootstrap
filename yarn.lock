@@ -87,8 +87,8 @@ babylon@^6.18.0:
   resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.18.0.tgz#af2f3b88fa6f5c1e4c634d1a0f8eac4f55b395e3"
 
 baconjs@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/baconjs/-/baconjs-3.0.1.tgz#c22ef347ed0e1f2a275b658dfff9df0194bfe80f"
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/baconjs/-/baconjs-3.0.3.tgz#af4f720357828a6389247abb5767bdc8c2f467c4"
 
 balanced-match@^1.0.0:
   version "1.0.0"
