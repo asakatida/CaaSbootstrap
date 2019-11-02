@@ -1,36 +1,7 @@
 {
-  "name": "caasbootstrap",
-  "version": "1.0.0",
-  "description": "Syntax tree for PEG grammars",
   "author": "Adam Grandquist <grandquista@gmail.com>",
   "bugs": {
     "url": "https://github.com/grandquista/CaaSbootstrap/issues"
-  },
-  "engines": {
-    "node": ">=7.8.0",
-    "npm": ">=4.5.0"
-  },
-  "homepage": "https://github.com/grandquista/CaaSbootstrap#readme",
-  "keywords": [
-    "peg",
-    "yacc",
-    "syntax"
-  ],
-  "license": "MIT",
-  "main": "server.js",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/grandquista/CaaSbootstrap.git"
-  },
-  "files": [
-    "app.js",
-    "server.js",
-    "api",
-    "resources",
-    "views"
-  ],
-  "scripts": {
-    "test": "jasmine"
   },
   "dependencies": {
     "ajv": "^6.5.2",
@@ -41,9 +12,38 @@
     "run-middleware": "^0.9.10",
     "superagent": "^5.0.0"
   },
+  "description": "Syntax tree for PEG grammars",
   "devDependencies": {
     "jasmine": "^3.2.0",
     "pegjs": "^0.10.0",
     "supertest": "^4.0.0"
-  }
+  },
+  "engines": {
+    "node": ">=7.8.0",
+    "npm": ">=4.5.0"
+  },
+  "files": [
+    "app.js",
+    "server.js",
+    "api",
+    "resources",
+    "views"
+  ],
+  "homepage": "https://github.com/grandquista/CaaSbootstrap#readme",
+  "keywords": [
+    "peg",
+    "yacc",
+    "syntax"
+  ],
+  "license": "MIT",
+  "main": "server.js",
+  "name": "caasbootstrap",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/grandquista/CaaSbootstrap.git"
+  },
+  "scripts": {
+    "test": "jasmine"
+  },
+  "version": "1.0.0"
 }

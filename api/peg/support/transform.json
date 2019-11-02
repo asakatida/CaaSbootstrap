@@ -1,457 +1,525 @@
 [
   {
+    "result": {
+      "map": {
+        "path": "$.fields[1]"
+      }
+    },
     "schema": {
       "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
-      "required": [
-        "type",
-        "fields"
-      ],
       "properties": {
         "type": {
           "const": "Grammar"
         }
-      }
-    },
-    "result": {
-      "map": { "path": "$.fields[1]" }
-    }
-  },
-  {
-    "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
+      },
       "required": [
         "type",
         "fields"
       ],
+      "type": "object"
+    }
+  },
+  {
+    "result": {
+      "object": {
+        "expression": {
+          "recurse": {
+            "path": "$.fields[2]"
+          }
+        },
+        "identifier": {
+          "recurse": {
+            "path": "$.fields[0]"
+          }
+        }
+      }
+    },
+    "schema": {
+      "$schema": "http://json-schema.org/draft-06/schema#",
       "properties": {
         "type": {
           "const": "Definition"
         }
-      }
-    },
-    "result": {
-      "object": {
-        "identifier": { "recurse": { "path": "$.fields[0]" } },
-        "expression": { "recurse": { "path": "$.fields[2]" } }
-      }
-    }
-  },
-  {
-    "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
+      },
       "required": [
         "type",
         "fields"
       ],
+      "type": "object"
+    }
+  },
+  {
+    "result": {
+      "object": {
+        "sequences": {
+          "map": {
+            "path": "$.fields[0,1][*][1]"
+          }
+        }
+      }
+    },
+    "schema": {
+      "$schema": "http://json-schema.org/draft-06/schema#",
       "properties": {
         "type": {
           "const": "Expression"
         }
-      }
-    },
-    "result": {
-      "object": {
-        "sequences": { "map": { "path": "$.fields[0,1][*][1]" } }
-      }
-    }
-  },
-  {
-    "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
+      },
       "required": [
         "type",
         "fields"
       ],
-      "properties": {
-        "type": {
-          "const": "Sequence"
-        }
-      }
-    },
+      "type": "object"
+    }
+  },
+  {
     "result": {
       "map": {
         "join": {
           "array": [
-            { "path": "$.fields[:1]" },
-            { "path": "$.fields[1][*][1]" }
+            {
+              "path": "$.fields[:1]"
+            },
+            {
+              "path": "$.fields[1][*][1]"
+            }
           ]
         }
       }
-    }
-  },
-  {
+    },
     "schema": {
       "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Sequence"
+        }
+      },
       "required": [
         "type",
         "fields"
       ],
+      "type": "object"
+    }
+  },
+  {
+    "result": {
+      "and": {
+        "recurse": {
+          "path": "$.fields[1]"
+        }
+      }
+    },
+    "schema": {
+      "$schema": "http://json-schema.org/draft-06/schema#",
       "properties": {
-        "type": {
-          "const": "Prefix"
-        },
         "fields": {
-          "type": "array",
           "items": [
             {
-              "type": "object",
-              "required": [
-                "type",
-                "fields"
-              ],
               "properties": {
                 "type": {
                   "const": "AND"
                 }
-              }
-            },
-            { "type": "object" }
-          ]
-        }
-      }
-    },
-    "result": {
-      "and": { "recurse": { "path": "$.fields[1]" } }
-    }
-  },
-  {
-    "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
-      "required": [
-        "type",
-        "fields"
-      ],
-      "properties": {
-        "type": {
-          "const": "Prefix"
-        },
-        "fields": {
-          "type": "array",
-          "items": [
-            {
-              "type": "object",
+              },
               "required": [
                 "type",
                 "fields"
               ],
+              "type": "object"
+            },
+            {
+              "type": "object"
+            }
+          ],
+          "type": "array"
+        },
+        "type": {
+          "const": "Prefix"
+        }
+      },
+      "required": [
+        "type",
+        "fields"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "result": {
+      "object": {
+        "not": {
+          "recurse": {
+            "path": "$.fields[1]"
+          }
+        }
+      }
+    },
+    "schema": {
+      "$schema": "http://json-schema.org/draft-06/schema#",
+      "properties": {
+        "fields": {
+          "items": [
+            {
               "properties": {
                 "type": {
                   "const": "NOT"
                 }
-              }
-            },
-            { "type": "object" }
-          ]
-        }
-      }
-    },
-    "result": {
-      "object": { "not": { "recurse": { "path": "$.fields[1]" } } }
-    }
-  },
-  {
-    "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
-      "required": [
-        "type",
-        "fields"
-      ],
-      "properties": {
-        "type": {
-          "const": "Prefix"
-        },
-        "fields": {
-          "type": "array",
-          "items": [
-            { "const": null },
-            { "type": "object" }
-          ]
-        }
-      }
-    },
-    "result": {
-      "recurse": { "path": "$.fields[1]" }
-    }
-  },
-  {
-    "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
-      "required": [
-        "type",
-        "fields"
-      ],
-      "properties": {
-        "type": {
-          "const": "Suffix"
-        },
-        "fields": {
-          "type": "array",
-          "items": [
-            { "type": "object" },
-            {
-              "type": "object",
+              },
               "required": [
                 "type",
                 "fields"
               ],
+              "type": "object"
+            },
+            {
+              "type": "object"
+            }
+          ],
+          "type": "array"
+        },
+        "type": {
+          "const": "Prefix"
+        }
+      },
+      "required": [
+        "type",
+        "fields"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "result": {
+      "recurse": {
+        "path": "$.fields[1]"
+      }
+    },
+    "schema": {
+      "$schema": "http://json-schema.org/draft-06/schema#",
+      "properties": {
+        "fields": {
+          "items": [
+            {
+              "const": null
+            },
+            {
+              "type": "object"
+            }
+          ],
+          "type": "array"
+        },
+        "type": {
+          "const": "Prefix"
+        }
+      },
+      "required": [
+        "type",
+        "fields"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "result": {
+      "object": {
+        "question": {
+          "recurse": {
+            "path": "$.fields[0]"
+          }
+        }
+      }
+    },
+    "schema": {
+      "$schema": "http://json-schema.org/draft-06/schema#",
+      "properties": {
+        "fields": {
+          "items": [
+            {
+              "type": "object"
+            },
+            {
               "properties": {
                 "type": {
                   "const": "QUESTION"
                 }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "result": {
-      "object": { "question": { "recurse": { "path": "$.fields[0]" } } }
-    }
-  },
-  {
-    "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
-      "required": [
-        "type",
-        "fields"
-      ],
-      "properties": {
-        "type": {
-          "const": "Suffix"
-        },
-        "fields": {
-          "type": "array",
-          "items": [
-            { "type": "object" },
-            {
-              "type": "object",
+              },
               "required": [
                 "type",
                 "fields"
               ],
+              "type": "object"
+            }
+          ],
+          "type": "array"
+        },
+        "type": {
+          "const": "Suffix"
+        }
+      },
+      "required": [
+        "type",
+        "fields"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "result": {
+      "object": {
+        "star": {
+          "recurse": {
+            "path": "$.fields[0]"
+          }
+        }
+      }
+    },
+    "schema": {
+      "$schema": "http://json-schema.org/draft-06/schema#",
+      "properties": {
+        "fields": {
+          "items": [
+            {
+              "type": "object"
+            },
+            {
               "properties": {
                 "type": {
                   "const": "STAR"
                 }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "result": {
-      "object": { "star": { "recurse": { "path": "$.fields[0]" } } }
-    }
-  },
-  {
-    "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
-      "required": [
-        "type",
-        "fields"
-      ],
-      "properties": {
-        "type": {
-          "const": "Suffix"
-        },
-        "fields": {
-          "type": "array",
-          "items": [
-            { "type": "object" },
-            {
-              "type": "object",
+              },
               "required": [
                 "type",
                 "fields"
               ],
+              "type": "object"
+            }
+          ],
+          "type": "array"
+        },
+        "type": {
+          "const": "Suffix"
+        }
+      },
+      "required": [
+        "type",
+        "fields"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "result": {
+      "object": {
+        "plus": {
+          "recurse": {
+            "path": "$.fields[0]"
+          }
+        }
+      }
+    },
+    "schema": {
+      "$schema": "http://json-schema.org/draft-06/schema#",
+      "properties": {
+        "fields": {
+          "items": [
+            {
+              "type": "object"
+            },
+            {
               "properties": {
                 "type": {
                   "const": "PLUS"
                 }
-              }
+              },
+              "required": [
+                "type",
+                "fields"
+              ],
+              "type": "object"
+            }
+          ],
+          "type": "array"
+        },
+        "type": {
+          "const": "Suffix"
+        }
+      },
+      "required": [
+        "type",
+        "fields"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "result": {
+      "recurse": {
+        "path": "$.fields[0]"
+      }
+    },
+    "schema": {
+      "$schema": "http://json-schema.org/draft-06/schema#",
+      "properties": {
+        "fields": {
+          "items": [
+            {
+              "type": "object"
+            },
+            {
+              "const": null
+            }
+          ],
+          "type": "array"
+        },
+        "type": {
+          "const": "Suffix"
+        }
+      },
+      "required": [
+        "type",
+        "fields"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "result": {},
+    "schema": {
+      "$schema": "http://json-schema.org/draft-06/schema#",
+      "properties": {
+        "fields": {
+          "items": [],
+          "type": "array"
+        },
+        "type": {
+          "const": "Primary"
+        }
+      },
+      "required": [
+        "type",
+        "fields"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "result": {
+      "join": {
+        "join": {
+          "array": [
+            {
+              "path": "$.fields[:1]..text"
+            },
+            {
+              "path": "$.fields[1]..text"
             }
           ]
         }
       }
     },
-    "result": {
-      "object": { "plus": { "recurse": { "path": "$.fields[0]" } } }
-    }
-  },
-  {
     "schema": {
       "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
-      "required": [
-        "type",
-        "fields"
-      ],
       "properties": {
-        "type": {
-          "const": "Suffix"
-        },
         "fields": {
-          "type": "array",
-          "items": [
-            { "type": "object" },
-            { "const": null }
-          ]
-        }
-      }
-    },
-    "result": {
-      "recurse": { "path": "$.fields[0]" }
-    }
-  },
-  {
-    "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
-      "required": [
-        "type",
-        "fields"
-      ],
-      "properties": {
-        "type": {
-          "const": "Primary"
+          "items": [],
+          "type": "array"
         },
-        "fields": {
-          "type": "array",
-          "items": [
-          ]
-        }
-      }
-    },
-    "result": {}
-  },
-  {
-    "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
-      "required": [
-        "type",
-        "fields"
-      ],
-      "properties": {
         "type": {
           "const": "Identifier"
-        },
-        "fields": {
-          "type": "array",
-          "items": [
-          ]
         }
-      }
-    },
+      },
+      "required": [
+        "type",
+        "fields"
+      ],
+      "type": "object"
+    }
+  },
+  {
     "result": {
       "join": {
-        "join": {
-          "array": [
-            { "path": "$.fields[:1]..text" },
-            { "path": "$.fields[1]..text" }
-          ]
-        }
+        "path": "$.fields[1]..text"
       }
-    }
-  },
-  {
+    },
     "schema": {
       "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
-      "required": [
-        "type",
-        "fields"
-      ],
       "properties": {
+        "fields": {
+          "items": [],
+          "type": "array"
+        },
         "type": {
           "const": "Literal"
-        },
-        "fields": {
-          "type": "array",
-          "items": [
-          ]
         }
-      }
-    },
-    "result": {
-      "join": { "path": "$.fields[1]..text" }
-    }
-  },
-  {
-    "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
+      },
       "required": [
         "type",
         "fields"
       ],
+      "type": "object"
+    }
+  },
+  {
+    "result": {
+      "map": {
+        "path": "$.fields[1]"
+      }
+    },
+    "schema": {
+      "$schema": "http://json-schema.org/draft-06/schema#",
       "properties": {
+        "fields": {
+          "items": [],
+          "type": "array"
+        },
         "type": {
           "const": "Class"
-        },
-        "fields": {
-          "type": "array",
-          "items": [
-          ]
         }
-      }
-    },
-    "result": {
-      "map": { "path": "$.fields[1]" }
-    }
-  },
-  {
-    "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
+      },
       "required": [
         "type",
         "fields"
       ],
-      "properties": {
-        "type": {
-          "const": "Range"
-        },
-        "fields": {
-          "type": "array",
-          "items": [
-          ]
-        }
-      }
-    },
-    "result": {
+      "type": "object"
     }
   },
   {
+    "result": {},
     "schema": {
       "$schema": "http://json-schema.org/draft-06/schema#",
-      "type": "object",
+      "properties": {
+        "fields": {
+          "items": [],
+          "type": "array"
+        },
+        "type": {
+          "const": "Range"
+        }
+      },
       "required": [
         "type",
         "fields"
       ],
+      "type": "object"
+    }
+  },
+  {
+    "result": {},
+    "schema": {
+      "$schema": "http://json-schema.org/draft-06/schema#",
       "properties": {
+        "fields": {
+          "items": [],
+          "type": "array"
+        },
         "type": {
           "const": "Range"
-        },
-        "fields": {
-          "type": "array",
-          "items": [
-          ]
         }
-      }
-    },
-    "result": {
+      },
+      "required": [
+        "type",
+        "fields"
+      ],
+      "type": "object"
     }
   }
 ]

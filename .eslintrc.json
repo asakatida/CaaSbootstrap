@@ -1,10 +1,10 @@
 {
-    "extends": "eslint:all",
-    "ecmaVersion": 8,
-    "ecmaFeatures": {
-      "impliedStrict": true
-    },
-    "env": {
-        "node": true
-    }
+  "ecmaFeatures": {
+    "impliedStrict": true
+  },
+  "ecmaVersion": 8,
+  "env": {
+    "node": true
+  },
+  "extends": "eslint:all"
 }
