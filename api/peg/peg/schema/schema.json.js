@@ -2,7 +2,7 @@ const Bacon = require('baconjs').Bacon;
 
 module.exports = function (req, res) {
   res.json({
-    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "A generic syntax tree",
     "$id": "https://" + req.hostname + req.originalUrl,
     "additionalProperties": false,

@@ -21,10 +21,10 @@ module.exports = function (req, res) {
       return Buffer.concat(body).toString('utf8');
     }) : Bacon.once(res.text)).flatMap(Bacon.try(peg.parse));
   }).subscribe(function (event) {
-    if (event.isError()) {
+    if (event.isError) {
       res.status(500).json(event.error);
-    } else if (event.hasValue()) {
-      res.json(event.value());
+    } else if (event.hasValue) {
+      res.json(event.value);
     }
   });
 };

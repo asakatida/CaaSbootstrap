@@ -4,7 +4,7 @@ const compile = require('./support/transform');
 const transform = compile([
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -22,7 +22,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -43,7 +43,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -63,7 +63,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -88,7 +88,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -124,7 +124,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -160,7 +160,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -185,7 +185,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -221,7 +221,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -257,7 +257,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -293,7 +293,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -318,7 +318,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -337,7 +337,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -365,7 +365,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -386,7 +386,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -407,7 +407,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -428,7 +428,7 @@ const transform = compile([
   },
   {
     "schema": {
-      "$schema": "http://json-schema.org/draft-06/schema#",
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "required": [
         "type",
@@ -460,10 +460,10 @@ module.exports = function (req, res) {
     .flatMap(Bacon.try(JSON.parse))
     .flatMap(Bacon.try(transform))
     .subscribe(function (event) {
-      if (event.isError()) {
+      if (event.isError) {
         res.status(500).json(event.error);
-      } else if (event.hasValue()) {
-        res.json(event.value());
+      } else if (event.hasValue) {
+        res.json(event.value);
       }
     });
   });

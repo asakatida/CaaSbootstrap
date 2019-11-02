@@ -1,16 +1,11 @@
 {
-  "name": "caasbootstrap",
   "version": "1.0.0",
   "description": "Syntax tree for PEG grammars",
   "author": "Adam Grandquist <grandquista@gmail.com>",
-  "bugs": {
-    "url": "https://github.com/grandquista/CaaSbootstrap/issues"
-  },
   "engines": {
     "node": ">=7.8.0",
     "npm": ">=4.5.0"
   },
-  "homepage": "https://github.com/grandquista/CaaSbootstrap#readme",
   "keywords": [
     "peg",
     "yacc",
@@ -18,10 +13,6 @@
   ],
   "license": "MIT",
   "main": "server.js",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/grandquista/CaaSbootstrap.git"
-  },
   "files": [
     "app.js",
     "server.js",
@@ -34,16 +25,16 @@
   },
   "dependencies": {
     "ajv": "^6.5.2",
-    "baconjs": "^3.0.0",
+    "baconjs": "^2.0.9",
     "express": "^4.15.3",
     "jsonpath": "^1.0.0",
     "pug": "^2.0.0-beta11",
     "run-middleware": "^0.9.10",
-    "superagent": "^5.0.0"
+    "superagent": "^3.5.2"
   },
   "devDependencies": {
     "jasmine": "^3.2.0",
     "pegjs": "^0.10.0",
-    "supertest": "^4.0.0"
+    "supertest": "^3.0.0"
   }
 }
