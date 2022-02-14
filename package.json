@@ -4,7 +4,7 @@
     "url": "https://github.com/grandquista/CaaSbootstrap/issues"
   },
   "dependencies": {
-    "ajv": "^6.5.2",
+    "ajv": "^6.12.3",
     "baconjs": "^3.0.0",
     "express": "^4.15.3",
     "jsonpath": "^1.0.0",
